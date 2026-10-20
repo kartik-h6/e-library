@@ -8,9 +8,22 @@ one page per subject, a 404 page, plus shared assets and data/schema.json.
 Run from the repository root:  python3 build/generate.py
 """
 import json, os, re, shutil, datetime
+from urllib.parse import urlencode
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CAT = json.load(open(os.path.join(ROOT, "data", "catalogue.json"), encoding="utf-8"))
+
+KINDS = [("notes", "Notes & PDFs"), ("paper", "Previous question papers"),
+         ("manual", "Lab manuals"), ("book", "Reference books")]
+ISSUES_URL = "https://github.com/kartik-h6/e-library/issues/new"
+
+
+def issue_url(s, sm, kind_label):
+    title = f"[Material] {s['code']} {s['title']} — {sm['label']}"
+    body = (f"Subject: {s['code']} {s['title']}\nSemester: {sm['label']}\nType: {kind_label}\n\n"
+            "Link (Google Drive, etc.):\n\nSource / licence:\n\nNotes for the reviewer:\n")
+    return ISSUES_URL + "?" + urlencode({"title": title, "body": body})
+
 
 TYPE_LABEL = {"theory": "Theory", "practical": "Practical", "aec": "AEC — Ability Enhancement",
               "sec": "SEC — Skill Enhancement", "vac": "VAC — Value Added",
@@ -140,6 +153,13 @@ a.card:hover{transform:translateY(-2px);border-color:var(--primary-strong);box-s
 .cta-band h2{color:#fff;margin:0 0 .2rem}
 .cta-band p{margin:0;color:#a7f3d0}
 .footer-nav a{margin:0 .4rem;color:var(--primary)}
+.res-grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.res-col{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.9rem 1rem}
+.res-col h3{font-size:.98rem;margin:0 0 .5rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.res-list{list-style:none;padding:0;margin:0 0 .6rem}
+.res-list li{display:flex;justify-content:space-between;gap:.6rem;padding:.35rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.empty-mini{font-size:.86rem;color:var(--muted);margin:0 0 .6rem}
+.res-submit{font-size:.84rem;font-weight:600}
 """
 
 
@@ -487,7 +507,7 @@ def build_semester(sm):
             continue
         cards = "".join(subject_card(root, sm, s) for s in items)
         groups.append(f'<section class="section"><h2>{label}</h2><div class="grid grid-2">{cards}</div></section>')
-    body = f"""{breadcrumbs(root, [("Home","index.html"),("Semesters","semesters/index.html"),(sm["label"],None)])}
+    body = f"""{breadcrumbs(root, [("Home","index.html"),("Browse","semesters/index.html"),(sm["label"],None)])}
 <h1>{esc(sm["label"])}</h1>
 <p class="meta">{len(sm["subjects"])} subjects &middot; {sm["credits"]} credits</p>
 {''.join(groups)}"""
@@ -498,7 +518,7 @@ def build_semester(sm):
 
 def build_subject(sm, s):
     root = "../../"
-    trail = [("Home", "index.html"), ("Semesters", "semesters/index.html"),
+    trail = [("Home", "index.html"), ("Browse", "semesters/index.html"),
              (sm["label"], f'semester-{sm["number"]}/'), (s["code"], None)]
     # units
     if s.get("units"):
@@ -514,14 +534,24 @@ def build_subject(sm, s):
     opt = ""
     if s.get("options"):
         opt = '<div class="options"><b>Choose one:</b> ' + esc(" · ".join(s["options"])) + "</div>"
-    # resources
+    # resources — the same four sections exist for every subject
     res = s.get("resources") or []
-    if res:
-        res_block = '<ul class="units">' + "".join(
-            f'<li><span>{esc(r["title"])}</span> <a href="{esc(r["url"])}" target="_blank" rel="noopener">Open</a></li>' for r in res) + "</ul>"
-    else:
-        res_block = ('<div class="empty"><p>No study material has been added for this subject yet.</p>'
-                     '<p class="meta"><a href="' + root + 'contact/index.html">Let us know</a> if you can help fill it.</p></div>')
+    cols = []
+    for kind, label in KINDS:
+        items = [r for r in res if (r.get("type") or "notes") == kind]
+        if items:
+            inner = '<ul class="res-list">' + "".join(
+                f'<li><span>{esc(r["title"])}</span> <a href="{esc(r["url"])}" target="_blank" rel="noopener">Open</a></li>'
+                for r in items) + "</ul>"
+        else:
+            inner = '<p class="empty-mini">Nothing added yet.</p>'
+        cols.append(
+            f'<div class="res-col"><h3>{label} <span class="badge">{len(items)}</span></h3>'
+            f'{inner}'
+            f'<a class="res-submit" href="{esc(issue_url(s, sm, label))}" target="_blank" rel="noopener">Submit {label.lower()} →</a></div>')
+    res_block = '<div class="res-grid">' + "".join(cols) + "</div>"
+    res_head = ('<p class="meta">Material is added subject by subject and reviewed before it appears. '
+                'Nothing here yet? Use a submit link — it opens a prefilled issue on GitHub.</p>')
     body = f"""{breadcrumbs(root, trail)}
 <div class="row" style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap">
   <div>
@@ -533,7 +563,7 @@ def build_subject(sm, s):
 </div>
 {opt}
 {units_block}
-<section class="section"><h2>Study material</h2>{res_block}</section>
+<section class="section"><h2>Study material</h2>{res_head}{res_block}</section>
 <section class="section">
   <p class="meta">Structure sourced from the PCI B.Pharm syllabus 2026 (NEP 2020) — interim source.
   Corrections welcome via the <a href="{root}contact/index.html">contact page</a>.</p>

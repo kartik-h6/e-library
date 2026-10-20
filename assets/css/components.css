@@ -49,3 +49,10 @@ a.card:hover{transform:translateY(-2px);border-color:var(--primary-strong);box-s
 .cta-band h2{color:#fff;margin:0 0 .2rem}
 .cta-band p{margin:0;color:#a7f3d0}
 .footer-nav a{margin:0 .4rem;color:var(--primary)}
+.res-grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.res-col{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.9rem 1rem}
+.res-col h3{font-size:.98rem;margin:0 0 .5rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.res-list{list-style:none;padding:0;margin:0 0 .6rem}
+.res-list li{display:flex;justify-content:space-between;gap:.6rem;padding:.35rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.empty-mini{font-size:.86rem;color:var(--muted);margin:0 0 .6rem}
+.res-submit{font-size:.84rem;font-weight:600}
