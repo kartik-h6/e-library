@@ -1,0 +1,1297 @@
+{
+  "schemaVersion": 1,
+  "curriculum": {
+    "programme": "B.Pharm",
+    "institution": "Raghavendra Institute of Pharmaceutical Education and Research (RIPER), Anantapur",
+    "awardingUniversity": "Jawaharlal Nehru Technological University Anantapur (JNTUA)",
+    "documentTitle": "Syllabus \u2014 Bachelor of Pharmacy (B.Pharm) 2026, as per NEP 2020",
+    "documentVersion": "2026",
+    "authority": "Pharmacy Council of India",
+    "sourceUrl": "https://pci.gov.in/documents/1455/B.Pharm_Syllabus_2026-_NEP2020_compressed.pdf",
+    "checkedAt": "2026-10-20",
+    "status": "provisional",
+    "note": "Interim source only. RIPER's official syllabus for the applicable cohort is to be supplied and verified before this is treated as authoritative (see docs/CURRICULUM_AND_CONTENT.md)."
+  },
+  "semesters": [
+    {
+      "id": "semester-1",
+      "number": 1,
+      "label": "Semester I",
+      "credits": 21,
+      "subjects": [
+        {
+          "id": "bp101t",
+          "code": "BP101T",
+          "slug": "bp101t-basics-of-python-programming-for-pharmaceutical-sciences",
+          "title": "Basics of Python Programming for Pharmaceutical Sciences",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Introduction to Python programming",
+            "Control Structures & Functions",
+            "Data Structures & File Handling",
+            "Data Handling with Pandas",
+            "Data Visualization with Matplotlib"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp102t",
+          "code": "BP102T",
+          "slug": "bp102t-general-pharmacy",
+          "title": "General Pharmacy",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Introduction to the Profession of Pharmacy",
+            "Introduction to Pharmaceutical Calculations and Dosage Forms",
+            "Solid Dosage Forms",
+            "Monophasic and Biphasic Liquids",
+            "Semisolid Dosage Forms"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp103t",
+          "code": "BP103T",
+          "slug": "bp103t-healthcare-psychology-and-communication-skills",
+          "title": "Healthcare Psychology and Communication Skills",
+          "credits": 1,
+          "type": "theory",
+          "units": [
+            "Introduction to Psychology in Healthcare",
+            "Developmental and Behavioural Psychology",
+            "Foundations of Health Communication",
+            "Professional Communication in Healthcare Settings",
+            "Health Psychology and Behavioural Interventions"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp104t",
+          "code": "BP104T",
+          "slug": "bp104t-human-anatomy-physiology-and-pathophysiology-i",
+          "title": "Human Anatomy, Physiology and Pathophysiology I",
+          "credits": 4,
+          "type": "theory",
+          "units": [
+            "Introduction to human body",
+            "Integumentary system and wound healing",
+            "Body fluids, blood and lymphatic system",
+            "Peripheral nervous system",
+            "Cardiovascular system"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp105t",
+          "code": "BP105T",
+          "slug": "bp105t-introduction-to-pharmacognosy",
+          "title": "Introduction to Pharmacognosy",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Fundamentals of Pharmacognosy",
+            "Cultivation, Collection, Processing and Storage of Drugs of Natural Origin",
+            "Quality Control of Drugs of Natural Origin (WHO Guidelines)",
+            "Introduction to Metabolites of Plant Origin",
+            "Phyto-therapeutic Agents"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp106t",
+          "code": "BP106T",
+          "slug": "bp106t-pharmaceutical-inorganic-and-analytical-chemistry",
+          "title": "Pharmaceutical Inorganic and Analytical Chemistry",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Introduction to pharmaceutical analysis",
+            "Acid-Base Chemistry and Buffer Systems in Pharmacy",
+            "Acid base titrations",
+            "Gastrointestinal agents",
+            "Miscellaneous Compounds"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp107p",
+          "code": "BP107P",
+          "slug": "bp107p-general-pharmacy",
+          "title": "General Pharmacy",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp108p",
+          "code": "BP108P",
+          "slug": "bp108p-healthcare-psychology-and-communication-skills",
+          "title": "Healthcare Psychology and Communication Skills",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp109p",
+          "code": "BP109P",
+          "slug": "bp109p-human-anatomy-physiology-and-pathophysiology-i",
+          "title": "Human Anatomy, Physiology and Pathophysiology I",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp110p",
+          "code": "BP110P",
+          "slug": "bp110p-introduction-to-pharmacognosy",
+          "title": "Introduction to Pharmacognosy",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp111p",
+          "code": "BP111P",
+          "slug": "bp111p-pharmaceutical-inorganic-and-analytical-chemistry",
+          "title": "Pharmaceutical Inorganic and Analytical Chemistry",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "semester-2",
+      "number": 2,
+      "label": "Semester II",
+      "credits": 26,
+      "subjects": [
+        {
+          "id": "bp201t",
+          "code": "BP201T",
+          "slug": "bp201t-applied-biostatistics-and-data-analytics-for-pharmaceutical-sciences",
+          "title": "Applied Biostatistics and Data Analytics for Pharmaceutical Sciences",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Descriptive Statistics",
+            "Probability & Statistical Distributions in Healthcare",
+            "Sampling & Statistical Inference",
+            "Basics of Correlation & Regression",
+            "Statistical Analysis Using Python \u2013 Case based learning"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp202t",
+          "code": "BP202T",
+          "slug": "bp202t-biochemistry",
+          "title": "Biochemistry",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Enzymology",
+            "Introduction about biomolecules \u2013 Introduction of carbohydrate, lipids,",
+            "Lipid metabolism",
+            "Amino acids and protein metabolism",
+            "Nucleic acid metabolism and genetic information transfer"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp203t",
+          "code": "BP203T",
+          "slug": "bp203t-human-anatomy-physiology-and-pathophysiology-ii",
+          "title": "Human Anatomy, Physiology and Pathophysiology II",
+          "credits": 4,
+          "type": "theory",
+          "units": [
+            "Nervous System",
+            "Gastrointestinal System",
+            "Respiratory System",
+            "Endocrine System",
+            "Reproductive System and Cancer"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp204t",
+          "code": "BP204T",
+          "slug": "bp204t-pharmaceutical-organic-chemistry",
+          "title": "Pharmaceutical Organic Chemistry",
+          "credits": 4,
+          "type": "theory",
+          "units": [
+            "Aliphatic Saturated Hydrocarbons \u2013 Alkanes",
+            "Aliphatic Unsaturated Hydrocarbons \u2013 Alkenes",
+            "Alkyl Halides",
+            "Benzene and Its Derivatives",
+            "Carbonyl Compounds - Aldehydes and Ketones"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp205t",
+          "code": "BP205T",
+          "slug": "bp205t-pharmacognosy-and-phytochemistry",
+          "title": "Pharmacognosy and Phytochemistry",
+          "credits": 4,
+          "type": "theory",
+          "units": [
+            "Metabolic Pathways and Biogenetic Studies",
+            "Primary Metabolites",
+            "Secondary Metabolites",
+            "Extraction Methods for Medicinal Plants \u2013 Conventional Methods of Extraction",
+            "Overview of Isolation, Identification and Characterization"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp206t",
+          "code": "BP206T",
+          "slug": "bp206t-physical-pharmaceutics",
+          "title": "Physical Pharmaceutics",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Solubility distribution phenomenon & buffers",
+            "Interfacial phenomenon",
+            "Colloidal and Coarse Dispersion",
+            "Rheological studies",
+            "Micromeritics"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp207p",
+          "code": "BP207P",
+          "slug": "bp207p-biochemistry",
+          "title": "Biochemistry",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp208p",
+          "code": "BP208P",
+          "slug": "bp208p-human-anatomy-physiology-and-pathophysiology-ii",
+          "title": "Human Anatomy, Physiology and Pathophysiology II",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp209p",
+          "code": "BP209P",
+          "slug": "bp209p-pharmaceutical-organic-chemistry",
+          "title": "Pharmaceutical Organic Chemistry",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp210p",
+          "code": "BP210P",
+          "slug": "bp210p-pharmacognosy-and-phytochemistry",
+          "title": "Pharmacognosy and Phytochemistry",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp211p",
+          "code": "BP211P",
+          "slug": "bp211p-physical-pharmaceutics",
+          "title": "Physical Pharmaceutics",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp212p",
+          "code": "BP212P",
+          "slug": "bp212p-skill-enhancement-course",
+          "title": "Skill Enhancement Course (choose one)",
+          "credits": 1,
+          "type": "sec",
+          "units": [],
+          "resources": [],
+          "options": [
+            "Communication Skills",
+            "Mental Well-Being, Stress & Conflict Management",
+            "Fundamentals of Computer Operations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "semester-3",
+      "number": 3,
+      "label": "Semester III",
+      "credits": 25,
+      "subjects": [
+        {
+          "id": "bp301t",
+          "code": "BP301T",
+          "slug": "bp301t-introduction-to-machine-learning-in-pharmaceutical-sciences",
+          "title": "Introduction to Machine Learning in Pharmaceutical Sciences",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Foundations of Machine Learning",
+            "Regression Models in Healthcare",
+            "Classification Models in Clinical Applications",
+            "Tree-Based Models & Ensemble Learning",
+            "Unsupervised Learning & Practical Case Studies"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp302t",
+          "code": "BP302T",
+          "slug": "bp302t-environmental-sciences",
+          "title": "Environmental Sciences",
+          "credits": 1,
+          "type": "theory",
+          "units": [
+            "Environmental Pollution",
+            "Pharmaceutical Waste and Effluent Management",
+            "Environmental Impact of the Pharmaceutical Industry",
+            "Sustainability in the Pharmaceutical Sector",
+            "Government Policies, Compliance, and Practical Exposure"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp303t",
+          "code": "BP303T",
+          "slug": "bp303t-ethics-and-universal-human-values",
+          "title": "Ethics and Universal Human Values",
+          "credits": 1,
+          "type": "theory",
+          "units": [
+            "Introduction to Value Education",
+            "Self-Exploration and Human Aspirations",
+            "Harmony in the Human Being",
+            "Harmony in the Individual and Society",
+            "Harmony in Society and Nature"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp304t",
+          "code": "BP304T",
+          "slug": "bp304t-general-pharmacology",
+          "title": "General Pharmacology",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Introduction to Pharmacology",
+            "Pharmacokinetics",
+            "Pharmacodynamics",
+            "Overview of drug discovery and evaluation of new drug",
+            "Toxicology"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp305t",
+          "code": "BP305T",
+          "slug": "bp305t-heterocyclic-compounds-and-stereochemistry",
+          "title": "Heterocyclic Compounds and Stereochemistry",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Chemistry of Carboxylic acids, Phenols, Amines and Polynuclear",
+            "Optical isomerism",
+            "Geometrical isomerism",
+            "Chemistry of five membered heterocycles",
+            "Chemistry of other heterocycles"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp306t",
+          "code": "BP306T",
+          "slug": "bp306t-pharmaceutical-dosage-forms-i",
+          "title": "Pharmaceutical Dosage Forms I",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Fundamentals of Dosage Form Development",
+            "Compressed Solids",
+            "Finely Divided and Filled Solids",
+            "Modified-Release Solids",
+            "Microencapsulation"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp307t",
+          "code": "BP307T",
+          "slug": "bp307t-pharmaceutical-engineering",
+          "title": "Pharmaceutical Engineering",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Unit operations associated with solids",
+            "Unit operations associated with liquids",
+            "Unit operations associated with heat transfer",
+            "Materials and material handling",
+            "Flow of fluids"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp308t",
+          "code": "BP308T",
+          "slug": "bp308t-pharmaceutical-microbiology",
+          "title": "Pharmaceutical Microbiology",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Introduction and role of microorganisms in pharmaceutical industry",
+            "Evaluation of microbiological contamination",
+            "Microbial control and evaluation",
+            "Sterilization procedures, assurance and evaluation",
+            "Microbiological quality control"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp309p",
+          "code": "BP309P",
+          "slug": "bp309p-general-pharmacology",
+          "title": "General Pharmacology",
+          "credits": 2,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp310p",
+          "code": "BP310P",
+          "slug": "bp310p-heterocyclic-compounds-and-stereochemistry",
+          "title": "Heterocyclic Compounds and Stereochemistry",
+          "credits": 2,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp311p",
+          "code": "BP311P",
+          "slug": "bp311p-pharmaceutical-dosage-forms-i",
+          "title": "Pharmaceutical Dosage Forms I",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp312p",
+          "code": "BP312P",
+          "slug": "bp312p-ability-enhancement-course",
+          "title": "Ability Enhancement Course (choose one)",
+          "credits": 1,
+          "type": "aec",
+          "units": [],
+          "resources": [],
+          "options": [
+            "Nutraceuticals and Functional Foods",
+            "Food Analysis",
+            "Yoga and Life Sciences"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "semester-4",
+      "number": 4,
+      "label": "Semester IV",
+      "credits": 23,
+      "subjects": [
+        {
+          "id": "bp401t",
+          "code": "BP401T",
+          "slug": "bp401t-herbal-drug-technology",
+          "title": "Herbal Drug Technology",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Plant Tissue Culture and Standardized Extracts",
+            "Herbal Formulations, Excipients and Cosmetics: Herbal formulations",
+            "Quality Control and Standardisation of Herbal Medicines",
+            "Herb\u2013Drug / Food / Herb Interactions",
+            "Regulatory Requirements of Herbal Drugs and Botanicals"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp402t",
+          "code": "BP402T",
+          "slug": "bp402t-medicinal-chemistry",
+          "title": "Medicinal Chemistry",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Fundamentals of Medicinal Chemistry",
+            "Drugs Acting on the Autonomic Nervous System",
+            "Drugs Acting on the Cardiovascular System",
+            "Drugs acting on blood and Renal System",
+            "Autacoids and related drugs"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp403t",
+          "code": "BP403T",
+          "slug": "bp403t-pharmaceutical-biotechnology",
+          "title": "Pharmaceutical Biotechnology",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Introduction to Pharmaceutical Biotechnology",
+            "Genetic Engineering and Recombinant DNA Technology",
+            "Microbial Biotransformation and Fermentation Technology",
+            "Gene Therapy, Genomics and Personalized Medicine",
+            "Immunology, Vaccines and Sera"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp404t",
+          "code": "BP404T",
+          "slug": "bp404t-social-pharmacy-and-public-health",
+          "title": "Social Pharmacy and Public Health",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Introduction to Social Pharmacy and Public Health",
+            "Health Systems, Policy, and Pharmacoepidemiology",
+            "Preventive Healthcare, Health Promotion, and Communicable",
+            "Non-Communicable Diseases, Nutrition, Mental Health, and National",
+            "Pharmacoeconomics, Rational Use of Medicines, Professional Roles,"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp405t",
+          "code": "BP405T",
+          "slug": "bp405t-systemic-pharmacology-i",
+          "title": "Systemic Pharmacology I",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Pharmacology of drugs acting on the peripheral nervous system",
+            "Pharmacology of drugs acting on the cardiovascular system",
+            "Pharmacology of drugs acting on blood and kidney",
+            "Pharmacology of autacoids and related drugs",
+            "Pharmacology of Drugs acting on respiratory system"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp406p",
+          "code": "BP406P",
+          "slug": "bp406p-herbal-drug-technology",
+          "title": "Herbal Drug Technology",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp407p",
+          "code": "BP407P",
+          "slug": "bp407p-medicinal-chemistry",
+          "title": "Medicinal Chemistry",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp408p",
+          "code": "BP408P",
+          "slug": "bp408p-pharmaceutical-biotechnology",
+          "title": "Pharmaceutical Biotechnology",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp409p",
+          "code": "BP409P",
+          "slug": "bp409p-social-pharmacy-and-public-health",
+          "title": "Social Pharmacy and Public Health",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp410p",
+          "code": "BP410P",
+          "slug": "bp410p-systemic-pharmacology-i",
+          "title": "Systemic Pharmacology I",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp411i",
+          "code": "BP411I",
+          "slug": "bp411i-internship-mandatory",
+          "title": "Internship (Mandatory)",
+          "credits": 4,
+          "type": "internship",
+          "units": [],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "semester-5",
+      "number": 5,
+      "label": "Semester V",
+      "credits": 22,
+      "subjects": [
+        {
+          "id": "bp501t",
+          "code": "BP501T",
+          "slug": "bp501t-biomedicinal-chemistry",
+          "title": "Biomedicinal Chemistry",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Drugs Acting on the Central Nervous System",
+            "Anti-Infective Chemotherapeutic Agents",
+            "Antibiotics and Sulfa Drugs",
+            "Antineoplastic Agents",
+            "Endocrine Drugs, Antidiabetic Agents and Narcotic Analgesics"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp502t",
+          "code": "BP502T",
+          "slug": "bp502t-industrial-pharmacognosy",
+          "title": "Industrial Pharmacognosy",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "General Introduction to Herbal Industries, institutions and trade",
+            "Commercial Production and Standardization of botanicals",
+            "Modern methods of analysis of Plants and Plant-based",
+            "Isolation, Characterization, Commercial Production and",
+            "International Regulatory Perspectives"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp503t",
+          "code": "BP503T",
+          "slug": "bp503t-innovation-and-startup-ecosystem",
+          "title": "Innovation and Startup Ecosystem",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Introduction to Innovation and Entrepreneurship",
+            "Ideation and Opportunity Identification",
+            "Building a Minimum Viable Product (MVP) and Validation",
+            "Business Models and Startup Operations",
+            "Scaling, Ecosystem Engagement, and Future Trends"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp504t",
+          "code": "BP504T",
+          "slug": "bp504t-pharmaceutical-dosage-form-ii",
+          "title": "Pharmaceutical Dosage Form II",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Monophasic Liquids & Pressurised Dosage Forms",
+            "Biphasic Liquids - Suspensions",
+            "Biphasic Liquids - Emulsions",
+            "Pressurized dosage forms (Aerosols/MDIs)",
+            "Semisolid Dosage Form"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp505t",
+          "code": "BP505T",
+          "slug": "bp505t-pharmaceutical-quality-assurance",
+          "title": "Pharmaceutical Quality Assurance",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Quality Assurance and Quality Management Systems",
+            "Organization, Personnel, Premises, and Materials Management",
+            "Quality Control and Good Laboratory Practices",
+            "Documentation, Complaints, and Product Recall",
+            "Calibration and Validation"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp506t",
+          "code": "BP506T",
+          "slug": "bp506t-systemic-pharmacology-ii",
+          "title": "Systemic Pharmacology II",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Pharmacology of Drugs Acting on Central Nervous System",
+            "Pharmacology of Drugs Used in Psychiatry",
+            "Chemotherapy",
+            "Pharmacology of Drugs Acting on Endocrine System",
+            "Drugs Acting on Gastrointestinal Tract"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp507p",
+          "code": "BP507P",
+          "slug": "bp507p-biomedicinal-chemistry",
+          "title": "Biomedicinal Chemistry",
+          "credits": 2,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp508p",
+          "code": "BP508P",
+          "slug": "bp508p-industrial-pharmacognosy",
+          "title": "Industrial Pharmacognosy",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp509p",
+          "code": "BP509P",
+          "slug": "bp509p-pharmaceutical-dosage-form-ii",
+          "title": "Pharmaceutical Dosage Form II",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp510p",
+          "code": "BP510P",
+          "slug": "bp510p-systemic-pharmacology-ii",
+          "title": "Systemic Pharmacology II",
+          "credits": 2,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "semester-6",
+      "number": 6,
+      "label": "Semester VI",
+      "credits": 26,
+      "subjects": [
+        {
+          "id": "bp601t",
+          "code": "BP601T",
+          "slug": "bp601t-advanced-pharmacognosy",
+          "title": "Advanced Pharmacognosy",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Reverse Pharmacology and Integrative Approaches",
+            "Metabolomics and Systems Biology",
+            "Modern Techniques in Natural Product Discovery",
+            "Validation and Development of Herbal Leads",
+            "Patenting of Natural Products"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp602t",
+          "code": "BP602T",
+          "slug": "bp602t-biopharmaceutics-and-pharmacokinetics",
+          "title": "Biopharmaceutics and Pharmacokinetics",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Introduction to Biopharmaceutics and pharmacokinetics",
+            "Elimination (Metabolism and Elimination): Drug metabolism and basic",
+            "Pharmacokinetic Models: Compartment Models: Definition, Basis of",
+            "Multicompartment models: Multiple dosage regimen: dosing interval, drug",
+            "Nonlinear Pharmacokinetics: Introduction, Reasons for Non-linearity,"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp603t",
+          "code": "BP603T",
+          "slug": "bp603t-intellectual-property-rights",
+          "title": "Intellectual Property Rights",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Introduction to Intellectual Property",
+            "Patents \u2013 Fundamentals and Process",
+            "Patent Laws and Acts",
+            "Other Forms of Intellectual Property",
+            "IPR Management and Commercialization"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp604t",
+          "code": "BP604T",
+          "slug": "bp604t-ai-applications-in-pharmaceutical-sciences",
+          "title": "AI Applications in Pharmaceutical Sciences",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "AI in Natural Products & Pharmacognostic Data Modeling",
+            "AI in Medicinal & Pharmaceutical Chemistry",
+            "AI in Drug Product Design & Performance Prediction",
+            "AI in Process Monitoring & Production Systems",
+            "AI in Pharmaceutical Analysis & Chemometrics"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp605t",
+          "code": "BP605T",
+          "slug": "bp605t-pharmaceutical-analysis",
+          "title": "Pharmaceutical Analysis",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Electrochemical Methods of analysis",
+            "Spectroscopy",
+            "Fluorometric Analysis",
+            "Introduction to Chromatographic Techniques",
+            "Gas chromatography: Introduction, theory, instrumentation,"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp606t",
+          "code": "BP606T",
+          "slug": "bp606t-pharmaceutical-jurisprudence",
+          "title": "Pharmaceutical Jurisprudence",
+          "credits": 3,
+          "type": "theory",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp607t",
+          "code": "BP607T",
+          "slug": "bp607t-ability-enhancement-course",
+          "title": "Ability Enhancement Course (choose one)",
+          "credits": 1,
+          "type": "aec",
+          "units": [],
+          "resources": [],
+          "options": [
+            "Green Chemistry",
+            "Materiovigilance and Hemovigilance",
+            "Scientific Writing",
+            "Drug Store and Business Management",
+            "Career Building in Cultivation of Medicinal Plants",
+            "Active Pharmaceutical Ingredients and Excipient Sciences"
+          ]
+        },
+        {
+          "id": "bp608p",
+          "code": "BP608P",
+          "slug": "bp608p-biopharmaceutics-and-pharmacokinetics",
+          "title": "Biopharmaceutics and Pharmacokinetics",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp609p",
+          "code": "BP609P",
+          "slug": "bp609p-pharmaceutical-analysis",
+          "title": "Pharmaceutical Analysis",
+          "credits": 2,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp610p",
+          "code": "BP610P",
+          "slug": "bp610p-skill-enhancement-course",
+          "title": "Skill Enhancement Course (choose one)",
+          "credits": 1,
+          "type": "sec",
+          "units": [],
+          "resources": [],
+          "options": [
+            "Computer-Aided Drug Design",
+            "Analytical Method Development and Validation",
+            "Principles of Preclinical Studies"
+          ]
+        },
+        {
+          "id": "bp611p",
+          "code": "BP611P",
+          "slug": "bp611p-value-added-course",
+          "title": "Value Added Course (choose one)",
+          "credits": 1,
+          "type": "vac",
+          "units": [],
+          "resources": [],
+          "options": [
+            "Professional Skills",
+            "Process Analytical Technology (PAT) and QbD in Formulation Science"
+          ]
+        },
+        {
+          "id": "bp612i",
+          "code": "BP612I",
+          "slug": "bp612i-internship-mandatory",
+          "title": "Internship (Mandatory)",
+          "credits": 4,
+          "type": "internship",
+          "units": [],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "semester-7",
+      "number": 7,
+      "label": "Semester VII",
+      "credits": 26,
+      "subjects": [
+        {
+          "id": "bp701t",
+          "code": "BP701T",
+          "slug": "bp701t-biostatistics-and-research-methodology",
+          "title": "Biostatistics and Research Methodology",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Basic concepts of biostatistics",
+            "Probability and probability distributions",
+            "Correlation and regression analysis",
+            "Inferential statistics",
+            "Research methodology"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp702t",
+          "code": "BP702T",
+          "slug": "bp702t-cosmetics-and-cosmeceuticals",
+          "title": "Cosmetics and Cosmeceuticals",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Cosmetics and cosmeceuticals, Classification of Cosmetics (Cosmetics",
+            "Common skin problems (Dry Skin, Oily skin, Pimples and acne,",
+            "Common Hair problems, Hair Cosmetics and cosmeceuticals",
+            "Various problems of oral cavity, Oral Cosmetics, and",
+            "Role of Regulatory authorities for Cosmetics and cosmeceuticals"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp703t",
+          "code": "BP703T",
+          "slug": "bp703t-ai-in-clinical-applications",
+          "title": "AI in Clinical Applications",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "AI in Pharmacokinetics & Dose Optimization",
+            "AI in Drug Safety & Pharmacovigilance",
+            "AI in Personalized Medicine & Risk Stratification",
+            "AI in Clinical Decision Support & Real-World Data",
+            "Guided Supervised Learning Project \u2013 Pharmaceutical and"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp704t",
+          "code": "BP704T",
+          "slug": "bp704t-modern-analytical-techniques",
+          "title": "Modern Analytical Techniques",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Nuclear Magnetic Resonance Spectroscopy",
+            "X-Ray Diffraction Methods",
+            "UPLC and Nano LC: Principle, advantages over LC and",
+            "Green Analytical Chemistry",
+            "Microscopy-Based Analytical Techniques"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp705t",
+          "code": "BP705T",
+          "slug": "bp705t-pharmacovigilance",
+          "title": "Pharmacovigilance",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Fundamentals of Pharmacovigilance",
+            "Pharmacovigilance Systems and Regulatory Framework",
+            "Adverse Drug Reactions (ADRs)",
+            "Immunovigilance and Other Disciplines of Pharmacovigilance",
+            "Risk Communication, Evaluation, Management, and ICH"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp706t",
+          "code": "BP706T",
+          "slug": "bp706t-pharmacy-practice",
+          "title": "Pharmacy Practice",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Introduction to Pharmacy Practice Definition, scope and evolution of",
+            "Hospital and Community Pharmacy",
+            "Clinical Pharmacy Services",
+            "Patient-Oriented Services",
+            "Prescribing Guidelines, Essential Drug Concept and Rational Drug"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp707t",
+          "code": "BP707T",
+          "slug": "bp707t-regulatory-affairs",
+          "title": "Regulatory Affairs",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Fundamentals of Regulatory Affairs",
+            "Regulatory Requirements in Drug Development",
+            "Indian Regulatory Framework and Approval Process",
+            "International Regulatory Systems & Global Drug Registration",
+            "Clinical Trials, Ethics, and Post-Marketing Surveillance"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp708t",
+          "code": "BP708T",
+          "slug": "bp708t-ability-enhancement-course",
+          "title": "Ability Enhancement Course (choose one)",
+          "credits": 1,
+          "type": "aec",
+          "units": [],
+          "resources": [],
+          "options": [
+            "Current Good Manufacturing Practices (cGMP)",
+            "Pharmaceutical Automation",
+            "Modern Techniques in Cellular Biology",
+            "Medical Devices",
+            "Transformation of Food Waste into Medicinal Products",
+            "Biosimilars, Vaccines & Macromolecules"
+          ]
+        },
+        {
+          "id": "bp709p",
+          "code": "BP709P",
+          "slug": "bp709p-modern-analytical-techniques",
+          "title": "Modern Analytical Techniques",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp710rp",
+          "code": "BP710RP",
+          "slug": "bp710rp-research-project",
+          "title": "Research Project",
+          "credits": 6,
+          "type": "project",
+          "units": [],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "semester-8",
+      "number": 8,
+      "label": "Semester VIII",
+      "credits": 24,
+      "subjects": [
+        {
+          "id": "bp801t",
+          "code": "BP801T",
+          "slug": "bp801t-ethical-considerations-and-translational-applications-of-ai-in-pharmacy",
+          "title": "Ethical Considerations and Translational Applications of AI in Pharmacy",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "AI Lifecycle, Validation & Model Auditing",
+            "Regulatory Framework & Explainable AI",
+            "AI in in Pharmacy Automation & Supply Chain",
+            "AI in in Public Health & Real-World Data Analytics",
+            "Guided Project - Translational AI in Pharmacy"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp802t",
+          "code": "BP802T",
+          "slug": "bp802t-clinical-pharmacotherapeutics",
+          "title": "Clinical Pharmacotherapeutics",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Ischemic Heart Disease",
+            "Respiratory System: Asthma, COPD",
+            "Renal System: acute renal failure, chronic renal failure, renal",
+            "Endocrine System: diabetes, thyroid disorders",
+            "Nervous System: epilepsy, stroke, parkinsonism"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp803t",
+          "code": "BP803T",
+          "slug": "bp803t-industrial-pharmacy-and-facility-design",
+          "title": "Industrial Pharmacy and Facility Design",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Regulatory guidelines for formulation Development",
+            "Technology development and transfer",
+            "Facility Considerations: Non sterile",
+            "Facility considerations: Sterile",
+            "Advances in facility design"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp804t",
+          "code": "BP804T",
+          "slug": "bp804t-pharmaceutical-management",
+          "title": "Pharmaceutical Management",
+          "credits": 2,
+          "type": "theory",
+          "units": [
+            "Introduction to Pharmaceutical Management",
+            "Marketing Management in Pharmaceuticals",
+            "Pharmaceutical Product Management",
+            "Financial planning and Human Resource Management",
+            "Operations & Supply Chain Management in Pharmaceuticals"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp805t",
+          "code": "BP805T",
+          "slug": "bp805t-sterile-dosage-forms-and-novel-drug-delivery-system",
+          "title": "Sterile Dosage Forms and Novel Drug Delivery System",
+          "credits": 3,
+          "type": "theory",
+          "units": [
+            "Fundamentals, Polymers & Materials for NDDS",
+            "Oral and Mucosal Delivery Systems",
+            "Transdermal NDDS",
+            "Evaluation, Quality, and Translation",
+            "Sterile Dosage Forms (Parenteral & Ophthalmic)"
+          ],
+          "resources": []
+        },
+        {
+          "id": "bp806t",
+          "code": "BP806T",
+          "slug": "bp806t-ability-enhancement-course",
+          "title": "Ability Enhancement Course (choose one)",
+          "credits": 2,
+          "type": "aec",
+          "units": [],
+          "resources": [],
+          "options": [
+            "Pharmaceutical Packaging",
+            "Supply Chain Management",
+            "Industrial Safety and Waste Management",
+            "Traditional Healing Practices of India",
+            "Futuristic Pharma through AR/VR: Pharma 4.0",
+            "Herbal Cosmetics for Industry Perspective"
+          ]
+        },
+        {
+          "id": "bp807p",
+          "code": "BP807P",
+          "slug": "bp807p-pharmaceutical-marketing-skills",
+          "title": "Pharmaceutical Marketing Skills",
+          "credits": 1,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp808p",
+          "code": "BP808P",
+          "slug": "bp808p-sterile-dosage-forms-and-novel-drug-delivery-system",
+          "title": "Sterile Dosage Forms and Novel Drug Delivery System",
+          "credits": 2,
+          "type": "practical",
+          "units": [],
+          "resources": []
+        },
+        {
+          "id": "bp809p",
+          "code": "BP809P",
+          "slug": "bp809p-value-added-course",
+          "title": "Value Added Course (choose one)",
+          "credits": 1,
+          "type": "vac",
+          "units": [],
+          "resources": [],
+          "options": [
+            "Cleaning Validation",
+            "Basic Training in Aseptic Handling Techniques",
+            "Impurity Profiling"
+          ]
+        },
+        {
+          "id": "bp810rp",
+          "code": "BP810RP",
+          "slug": "bp810rp-research-project",
+          "title": "Research Project",
+          "credits": 6,
+          "type": "project",
+          "units": [],
+          "resources": []
+        }
+      ]
+    }
+  ]
+}

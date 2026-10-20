@@ -1,0 +1,11 @@
+:root{
+  --bg:#eef2f6; --surface:#ffffff; --surface-2:#f8fafc;
+  --ink:#1f2937; --ink-soft:#4b5563; --muted:#6b7280; --line:#e2e8f0;
+  --primary:#0f766e; --primary-strong:#0d9488; --primary-soft:#f0fdfa;
+  --header-from:#0f172a; --header-to:#134e4a;
+  --radius:16px; --radius-sm:10px; --radius-pill:999px;
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.06);
+  --shadow-sm:0 1px 2px rgba(15,23,42,.08);
+  --space:1rem; --maxw:1100px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
