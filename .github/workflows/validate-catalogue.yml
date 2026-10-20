@@ -1,0 +1,24 @@
+name: Validate catalogue
+
+on:
+  push:
+    paths:
+      - 'data/catalogue.json'
+      - 'data/schema.json'
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet jsonschema
+      - name: Validate catalogue against schema
+        run: |
+          python -c "import json, jsonschema; \
+            jsonschema.validate(json.load(open('data/catalogue.json')), \
+                                json.load(open('data/schema.json'))); \
+            print('catalogue.json validates against schema.json')"
