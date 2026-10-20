@@ -16,7 +16,7 @@ index.html              home
 semesters/index.html    semester index
 semester-N/index.html   semester page
 semester-N/<subject>/   subject page (units + study material)
-search/  about/  contribute/  contact/   404.html
+semesters/ (browse + search)  about/  contact/   404.html
 assets/css  assets/js  assets/logo
 data/catalogue.json     single source of truth for the structure
 data/schema.json        JSON Schema for the catalogue

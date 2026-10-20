@@ -25,3 +25,27 @@ a.card:hover{transform:translateY(-2px);border-color:var(--primary-strong);box-s
 .meta{font-size:.82rem;color:var(--muted)}
 .pill-row{display:flex;flex-wrap:wrap;gap:.4rem}
 .options{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.7rem .9rem;font-size:.9rem}
+.landing-hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:2.4rem 1.5rem;box-shadow:var(--shadow-sm);text-align:center}
+.landing-hero .eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--primary);margin:0 0 .6rem}
+.landing-hero h1{font-size:2rem;max-width:26ch;margin:0 auto .7rem}
+.landing-hero .lead{color:var(--ink-soft);max-width:62ch;margin:0 auto 1.3rem}
+.hero-cta{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.stat-band{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-top:1.1rem}
+@media(min-width:640px){.stat-band{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem;text-align:center}
+.stat b{display:block;font-size:1.7rem;color:var(--primary)}
+.stat span{font-size:.8rem;color:var(--muted)}
+.sem-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem}
+.sem-chip{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.75rem .9rem;display:block;color:inherit}
+.sem-chip:hover{border-color:var(--primary-strong);text-decoration:none}
+.sem-chip b{display:block;color:var(--primary);font-size:.95rem}
+.sem-chip span{font-size:.76rem;color:var(--muted)}
+.feature h3{margin:.55rem 0 .3rem}
+.feature p{margin:0;color:var(--ink-soft);font-size:.9rem}
+.f-ico{width:30px;height:30px;border-radius:8px;background:var(--primary-soft);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700}
+.steps{margin:0;padding-left:1.2rem;color:var(--ink-soft)}
+.steps li{margin-bottom:.4rem}
+.cta-band{background:linear-gradient(120deg,var(--header-from),var(--header-to));color:#fff;border-radius:var(--radius);padding:1.4rem 1.5rem;display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.cta-band h2{color:#fff;margin:0 0 .2rem}
+.cta-band p{margin:0;color:#a7f3d0}
+.footer-nav a{margin:0 .4rem;color:var(--primary)}

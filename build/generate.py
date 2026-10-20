@@ -115,7 +115,32 @@ a.card:hover{transform:translateY(-2px);border-color:var(--primary-strong);box-s
 .search-box input{flex:1;min-width:220px;padding:.7rem .9rem;border:1px solid var(--line);border-radius:var(--radius-sm);font:inherit}
 .meta{font-size:.82rem;color:var(--muted)}
 .pill-row{display:flex;flex-wrap:wrap;gap:.4rem}
-.options{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.7rem .9rem;font-size:.9rem}"""
+.options{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.7rem .9rem;font-size:.9rem}
+.landing-hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:2.4rem 1.5rem;box-shadow:var(--shadow-sm);text-align:center}
+.landing-hero .eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--primary);margin:0 0 .6rem}
+.landing-hero h1{font-size:2rem;max-width:26ch;margin:0 auto .7rem}
+.landing-hero .lead{color:var(--ink-soft);max-width:62ch;margin:0 auto 1.3rem}
+.hero-cta{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.stat-band{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-top:1.1rem}
+@media(min-width:640px){.stat-band{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem;text-align:center}
+.stat b{display:block;font-size:1.7rem;color:var(--primary)}
+.stat span{font-size:.8rem;color:var(--muted)}
+.sem-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem}
+.sem-chip{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.75rem .9rem;display:block;color:inherit}
+.sem-chip:hover{border-color:var(--primary-strong);text-decoration:none}
+.sem-chip b{display:block;color:var(--primary);font-size:.95rem}
+.sem-chip span{font-size:.76rem;color:var(--muted)}
+.feature h3{margin:.55rem 0 .3rem}
+.feature p{margin:0;color:var(--ink-soft);font-size:.9rem}
+.f-ico{width:30px;height:30px;border-radius:8px;background:var(--primary-soft);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700}
+.steps{margin:0;padding-left:1.2rem;color:var(--ink-soft)}
+.steps li{margin-bottom:.4rem}
+.cta-band{background:linear-gradient(120deg,var(--header-from),var(--header-to));color:#fff;border-radius:var(--radius);padding:1.4rem 1.5rem;display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.cta-band h2{color:#fff;margin:0 0 .2rem}
+.cta-band p{margin:0;color:#a7f3d0}
+.footer-nav a{margin:0 .4rem;color:var(--primary)}
+"""
 
 
 # ---------------------------------------------------------------- JS
@@ -187,10 +212,13 @@ window.Search = (function(){
             hay:[s.code,s.title,sem.label,(s.options||[]).join(' '),(s.units||[]).join(' ')].join(' ').toLowerCase()});
         });
       });
+      var grid=document.getElementById('semesters');
       function run(){
-        var q=(input.value||'').trim().toLowerCase();
-        if(!q){ render([], ''); return; }
-        render(idx.filter(function(it){return it.hay.indexOf(q)>=0;}), q);
+        var raw=(input.value||'').trim();
+        if(grid){ grid.style.display = raw ? 'none' : ''; }
+        var rc=document.getElementById('result-count');
+        if(!raw){ document.getElementById('results').innerHTML=''; if(rc) rc.textContent=''; return; }
+        render(idx.filter(function(it){return it.hay.indexOf(raw.toLowerCase())>=0;}), raw);
       }
       input.addEventListener('input', run); run();
     }).catch(function(e){
@@ -286,11 +314,11 @@ SCHEMA = {
 def shell(title, desc, root, body, active="", extra_scripts="", data_root=None):
     dr = data_root if data_root is not None else root
     nav = [("index.html", "Home", "home"), ("semesters/index.html", "Browse", "browse"),
-           ("search/index.html", "Search", "search"), ("about/index.html", "About", "about"),
-           ("contribute/index.html", "Contribute", "contribute"), ("contact/index.html", "Contact", "contact")]
+           ("about/index.html", "About", "about"), ("contact/index.html", "Contact", "contact")]
     links = "".join(
         '<li><a href="%s%s"%s>%s</a></li>' % (root, h, ' aria-current="page"' if k == active else '', n)
         for h, n, k in nav)
+    footer_links = " · ".join('<a href="%s%s">%s</a>' % (root, h, n) for h, n, k in nav)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -319,6 +347,7 @@ def shell(title, desc, root, body, active="", extra_scripts="", data_root=None):
 {body}
 </main>
 <footer class="site-footer">
+  <p class="footer-nav">{footer_links}</p>
   <p>RIPER e-Library &middot; a student-built study library. Not an official publication of RIPER.</p>
   <p>Course structure from the PCI B.Pharm syllabus 2026 (NEP 2020), used as an interim source pending the college's official syllabus. &copy; <span id="year"></span></p>
 </footer>
@@ -354,30 +383,74 @@ def subject_card(root, sem, s):
 
 
 def build_home():
-    cards = "".join(
-        f'<a class="card" href="semester-{sm["number"]}/"><div class="code">Semester {sm["number"]}</div>'
-        f'<div class="title">{esc(sm["label"])}</div>'
-        f'<div class="sub">{len(sm["subjects"])} subjects &middot; {sm["credits"]} credits</div></a>'
+    sem_strip = "".join(
+        f'<a class="sem-chip" href="semester-{sm["number"]}/"><b>{esc(sm["label"])}</b>'
+        f'<span>{len(sm["subjects"])} subjects &middot; {sm["credits"]} cr</span></a>'
         for sm in CAT["semesters"])
+    n_subj = sum(len(sm["subjects"]) for sm in CAT["semesters"])
+    n_units = sum(len(s.get("units") or []) for sm in CAT["semesters"] for s in sm["subjects"])
+    n_cred = sum(sm["credits"] for sm in CAT["semesters"])
     body = f"""
-<section class="hero">
-  <h1>B.Pharm notes and resources, semester by semester.</h1>
-  <p>Pick your semester, open a subject, and see its official units. Study material is added subject by subject.</p>
+<section class="landing-hero">
+  <p class="eyebrow">RIPER &middot; B.Pharm study library</p>
+  <h1>Every subject, its official units, and the notes — in one place.</h1>
+  <p class="lead">The RIPER e-Library organises B.Pharm study material the way the syllabus does: by semester,
+  by subject, by unit. No hunting through chat groups or scattered drives — pick your semester and go.</p>
+  <div class="hero-cta">
+    <a class="btn" href="semesters/index.html">Browse the library</a>
+    <a class="btn secondary" href="about/index.html">How it works</a>
+  </div>
 </section>
+
+<section class="stat-band">
+  <div class="stat"><b>8</b><span>Semesters</span></div>
+  <div class="stat"><b>{n_subj}</b><span>Subjects</span></div>
+  <div class="stat"><b>{n_units}</b><span>Units mapped</span></div>
+  <div class="stat"><b>{n_cred}</b><span>Credits covered</span></div>
+</section>
+
 <section class="section">
-  <h2>Semesters</h2>
-  <div class="grid grid-4">{cards}</div>
+  <h2>Jump to your semester</h2>
+  <div class="sem-strip">{sem_strip}</div>
 </section>
+
+<section class="section">
+  <h2>What you'll find</h2>
+  <div class="grid grid-3">
+    <div class="card feature"><div class="f-ico">1</div><h3>Semester-wise structure</h3>
+      <p>All eight semesters laid out as the PCI B.Pharm syllabus prescribes — codes, titles and credits included.</p></div>
+    <div class="card feature"><div class="f-ico">2</div><h3>Official units</h3>
+      <p>Each theory subject lists its official unit headings, so you can see the whole course before you start.</p></div>
+    <div class="card feature"><div class="f-ico">3</div><h3>Notes &amp; PDFs</h3>
+      <p>Material is added subject by subject and reviewed before it appears. Where none exists yet, the page says so.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><b>Pick your semester</b> from the browse page.</li>
+    <li><b>Open a subject</b> — theory, practical, or an elective.</li>
+    <li><b>Read the units</b> and open any notes or PDFs attached to them.</li>
+  </ol>
+</section>
+
 <section class="section">
   <div class="notice">
-    <b>About this build.</b> The course structure (codes, titles, credits and unit headings) follows the
-    <b>PCI B.Pharm syllabus 2026 (NEP 2020)</b>, used here as an <b>interim source</b> until RIPER's official
-    syllabus for your cohort is supplied and verified. Where a subject has no material yet, you'll see an empty
-    state — not placeholder content.
+    <b>About the curriculum.</b> The course structure follows the <b>PCI B.Pharm syllabus 2026 (NEP 2020)</b>,
+    used as an <b>interim source</b> until RIPER's official syllabus for your cohort is supplied and verified.
+  </div>
+</section>
+
+<section class="section">
+  <div class="cta-band">
+    <div><h2>Missing something?</h2>
+      <p>If a subject has no notes yet, or you spot a wrong unit title, let us know.</p></div>
+    <a class="btn" href="contact/index.html">Contact &amp; corrections</a>
   </div>
 </section>"""
-    write("index.html", shell("RIPER e-Library — B.Pharm (PCI 2026)",
-          "Semester-wise B.Pharm study library for RIPER students, mapped to the PCI 2026 syllabus.", "", body, active="home"))
+    write("index.html", shell("RIPER e-Library — B.Pharm study library",
+          "A semester-wise B.Pharm study library for RIPER students, mapped to the PCI 2026 syllabus.", "", body, active="home"))
 
 
 def build_semesters():
@@ -388,11 +461,21 @@ def build_semesters():
         f'<span class="badge">{sm["credits"]} cr</span></div>'
         f'<div class="sub">{esc(", ".join(s["title"] for s in sm["subjects"][:3]))}…</div></a>'
         for sm in CAT["semesters"])
-    body = f"""{breadcrumbs('../', [("Home","index.html"),("Semesters",None)])}
-<h1>Browse by semester</h1>
-<div class="grid grid-2">{rows}</div>"""
-    write("semesters/index.html", shell("Semesters — RIPER e-Library",
-          "All eight B.Pharm semesters in the RIPER e-Library.", "../", body, active="browse"))
+    body = f"""{breadcrumbs('../', [("Home","index.html"),("Browse",None)])}
+<h1>Browse the library</h1>
+<p class="meta">Search by subject, course code or topic — or pick a semester below.</p>
+<div class="search-box">
+  <label class="visually-hidden" for="q">Search the library</label>
+  <input id="q" type="search" placeholder="Search a subject, course code or topic…" autocomplete="off">
+</div>
+<p class="meta" id="result-count" role="status" aria-live="polite"></p>
+<div id="results" class="grid grid-2"></div>
+<div id="semesters">
+  <h2>All semesters</h2>
+  <div class="grid grid-2">{rows}</div>
+</div>"""
+    write("semesters/index.html", shell("Browse — RIPER e-Library",
+          "Browse and search all eight B.Pharm semesters in the RIPER e-Library.", "../", body, active="browse"))
 
 
 def build_semester(sm):
@@ -438,7 +521,7 @@ def build_subject(sm, s):
             f'<li><span>{esc(r["title"])}</span> <a href="{esc(r["url"])}" target="_blank" rel="noopener">Open</a></li>' for r in res) + "</ul>"
     else:
         res_block = ('<div class="empty"><p>No study material has been added for this subject yet.</p>'
-                     '<p class="meta"><a href="' + root + 'contribute/index.html">Contribute material</a> — it is reviewed before it appears here.</p></div>')
+                     '<p class="meta"><a href="' + root + 'contact/index.html">Let us know</a> if you can help fill it.</p></div>')
     body = f"""{breadcrumbs(root, trail)}
 <div class="row" style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap">
   <div>
@@ -453,24 +536,11 @@ def build_subject(sm, s):
 <section class="section"><h2>Study material</h2>{res_block}</section>
 <section class="section">
   <p class="meta">Structure sourced from the PCI B.Pharm syllabus 2026 (NEP 2020) — interim source.
-  Corrections welcome via <a href="{root}contribute/index.html">Contribute</a>.</p>
+  Corrections welcome via the <a href="{root}contact/index.html">contact page</a>.</p>
 </section>"""
     write(f'semester-{sm["number"]}/{s["slug"]}/index.html',
           shell(f'{s["code"]} {s["title"]} — RIPER e-Library',
                 f'{s["title"]} ({s["code"]}), {sm["label"]} — units and study material.', root, body))
-
-
-def build_search():
-    body = f"""{breadcrumbs('../', [("Home","index.html"),("Search",None)])}
-<h1>Search</h1>
-<div class="search-box">
-  <label class="visually-hidden" for="q">Search the library</label>
-  <input id="q" type="search" placeholder="Search a subject, course code or topic…" autocomplete="off">
-</div>
-<p class="meta" id="result-count" role="status" aria-live="polite"></p>
-<div id="results" class="grid grid-2"></div>"""
-    write("search/index.html", shell("Search — RIPER e-Library",
-          "Search subjects and topics across the RIPER e-Library.", "../", body, active="search"))
 
 
 def build_about():
@@ -503,41 +573,26 @@ official syllabus for the applicable cohort is supplied and verified.</p>
           "About the RIPER e-Library, its curriculum source and content policy.", "../", body, active="about"))
 
 
-def build_contribute():
-    body = f"""{breadcrumbs('../', [("Home","index.html"),("Contribute",None)])}
-<h1>Contribute material</h1>
-<div class="stack">
-<p>Have notes, a previous question paper, or a lab manual for a subject? Contributions are welcome and are
-reviewed before they are published.</p>
-<h2>How to send it</h2>
-<ul>
-  <li>Open a GitHub issue with the subject code, semester, a link (e.g. Google Drive) or an attachment, and a note on the source.</li>
-  <li>Or email the maintainer via the <a href="../contact/index.html">Contact</a> page.</li>
-</ul>
-<div class="notice">
-  This is a static site. There is no shared upload database and no login — a form here could not store submissions.
-  So please use the issue tracker or email above, which reach a maintainer.
-</div>
-<h2>What we can and can't publish</h2>
-<ul>
-  <li>✅ Your own notes, openly licensed material, and links to lawful sources.</li>
-  <li>❌ Copyrighted textbooks, paid coaching material, restricted institutional files, or personal data.</li>
-</ul>
-<p class="meta">See <a href="../docs/CONTRIBUTING.md">CONTRIBUTING</a> in the repository for the full guide.</p>
-</div>"""
-    write("contribute/index.html", shell("Contribute — RIPER e-Library",
-          "How to contribute study material to the RIPER e-Library.", "../", body, active="contribute"))
-
-
 def build_contact():
     body = f"""{breadcrumbs('../', [("Home","index.html"),("Contact",None)])}
 <h1>Contact &amp; corrections</h1>
 <div class="stack">
-<p>Found a broken link, a wrong unit title, or a subject that should be listed? Tell us.</p>
+<p>Found a broken link, a wrong unit title, or a subject that should be listed? Tell us — corrections are welcome.</p>
+<h2>Report a correction</h2>
 <ul>
   <li>Open an issue in the project's GitHub repository (preferred for non-sensitive items).</li>
   <li>For anything sensitive, use a private channel to the maintainer rather than a public issue.</li>
 </ul>
+<h2>Contribute material</h2>
+<p>Have notes, a previous question paper, or a lab manual for a subject? Send it through either channel above and
+it will be reviewed before it appears.</p>
+<p><b>We can publish:</b> your own notes, openly licensed material, and links to lawful sources.</p>
+<p><b>We can't publish:</b> copyrighted textbooks, paid coaching material, restricted institutional files, or personal data.</p>
+<div class="notice">
+  This is a static site — there is no shared upload database and no login, so a form here could not store submissions.
+  Please use the issue tracker or email, which reach a maintainer.
+</div>
+<p class="meta">See <a href="../docs/CONTRIBUTING.md">CONTRIBUTING</a> in the repository for the full guide.</p>
 <p class="meta">Do not post credentials or personal data in public issues.</p>
 </div>"""
     write("contact/index.html", shell("Contact — RIPER e-Library",
@@ -550,7 +605,7 @@ def build_404():
   <h1>Page not found</h1>
   <p>That page doesn't exist — it may have moved, or the link may be mistyped.</p>
   <p style="margin-top:.9rem"><a class="btn" href="index.html">Go to the home page</a>
-  <a class="btn secondary" href="search/index.html">Search the library</a></p>
+  <a class="btn secondary" href="semesters/index.html">Browse the library</a></p>
 </section>"""
     write("404.html", shell("Page not found — RIPER e-Library",
           "The page could not be found.", "", body, data_root=""))
@@ -604,7 +659,7 @@ index.html              home
 semesters/index.html    semester index
 semester-N/index.html   semester page
 semester-N/<subject>/   subject page (units + study material)
-search/  about/  contribute/  contact/   404.html
+semesters/ (browse + search)  about/  contact/   404.html
 assets/css  assets/js  assets/logo
 data/catalogue.json     single source of truth for the structure
 data/schema.json        JSON Schema for the catalogue
@@ -638,11 +693,14 @@ def main():
     build_readme()
     build_home()
     build_semesters()
-    build_search()
     build_about()
-    build_contribute()
     build_contact()
     build_404()
+    # remove pages that no longer exist in this information architecture
+    for stale in ("search", "contribute"):
+        d = os.path.join(ROOT, stale)
+        if os.path.isdir(d):
+            shutil.rmtree(d)
     for sm in CAT["semesters"]:
         build_semester(sm)
         for s in sm["subjects"]:

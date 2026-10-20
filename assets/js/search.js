@@ -29,10 +29,13 @@ window.Search = (function(){
             hay:[s.code,s.title,sem.label,(s.options||[]).join(' '),(s.units||[]).join(' ')].join(' ').toLowerCase()});
         });
       });
+      var grid=document.getElementById('semesters');
       function run(){
-        var q=(input.value||'').trim().toLowerCase();
-        if(!q){ render([], ''); return; }
-        render(idx.filter(function(it){return it.hay.indexOf(q)>=0;}), q);
+        var raw=(input.value||'').trim();
+        if(grid){ grid.style.display = raw ? 'none' : ''; }
+        var rc=document.getElementById('result-count');
+        if(!raw){ document.getElementById('results').innerHTML=''; if(rc) rc.textContent=''; return; }
+        render(idx.filter(function(it){return it.hay.indexOf(raw.toLowerCase())>=0;}), raw);
       }
       input.addEventListener('input', run); run();
     }).catch(function(e){
