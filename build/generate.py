@@ -13,8 +13,10 @@ from urllib.parse import urlencode
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CAT = json.load(open(os.path.join(ROOT, "data", "catalogue.json"), encoding="utf-8"))
 
-KINDS = [("notes", "Notes & PDFs"), ("paper", "Previous question papers"),
-         ("manual", "Lab manuals"), ("book", "Reference books")]
+KINDS = [("notes", "Notes & PDFs", ""),
+         ("paper", "Previous question papers",
+          "None yet — the 2026 (NEP 2020) batch is the first cohort, so no papers have been set."),
+         ("manual", "Lab manuals", ""), ("book", "Reference books", "")]
 ISSUES_URL = "https://github.com/kartik-h6/e-library/issues/new"
 
 
@@ -160,6 +162,7 @@ a.card:hover{transform:translateY(-2px);border-color:var(--primary-strong);box-s
 .res-list li{display:flex;justify-content:space-between;gap:.6rem;padding:.35rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
 .empty-mini{font-size:.86rem;color:var(--muted);margin:0 0 .6rem}
 .res-submit{font-size:.84rem;font-weight:600}
+.sem-note{margin-bottom:1.2rem}
 """
 
 
@@ -459,6 +462,8 @@ def build_home():
   <div class="notice">
     <b>About the curriculum.</b> The course structure follows the <b>PCI B.Pharm syllabus 2026 (NEP 2020)</b>,
     used as an <b>interim source</b> until RIPER's official syllabus for your cohort is supplied and verified.
+    The first NEP 2020 batch was admitted in 2026, so only the earliest semesters have a cohort in session — later
+    semesters are shown for reference, and no previous question papers exist yet.
   </div>
 </section>
 
@@ -507,9 +512,14 @@ def build_semester(sm):
             continue
         cards = "".join(subject_card(root, sm, s) for s in items)
         groups.append(f'<section class="section"><h2>{label}</h2><div class="grid grid-2">{cards}</div></section>')
+    note = ""
+    if sm["number"] > 1:
+        note = ('<div class="notice sem-note">No batch is studying this semester yet — the first NEP 2020 cohort was '
+                'admitted in 2026 and has just begun. The structure is shown for reference.</div>')
     body = f"""{breadcrumbs(root, [("Home","index.html"),("Browse","semesters/index.html"),(sm["label"],None)])}
 <h1>{esc(sm["label"])}</h1>
 <p class="meta">{len(sm["subjects"])} subjects &middot; {sm["credits"]} credits</p>
+{note}
 {''.join(groups)}"""
     write(f'semester-{sm["number"]}/index.html',
           shell(f'{sm["label"]} — RIPER e-Library',
@@ -537,18 +547,22 @@ def build_subject(sm, s):
     # resources — the same four sections exist for every subject
     res = s.get("resources") or []
     cols = []
-    for kind, label in KINDS:
+    for kind, label, note in KINDS:
         items = [r for r in res if (r.get("type") or "notes") == kind]
+        submit = (f'<a class="res-submit" href="{esc(issue_url(s, sm, label))}" target="_blank" rel="noopener">'
+                  f'Submit {label.lower()} →</a>')
         if items:
             inner = '<ul class="res-list">' + "".join(
                 f'<li><span>{esc(r["title"])}</span> <a href="{esc(r["url"])}" target="_blank" rel="noopener">Open</a></li>'
                 for r in items) + "</ul>"
+        elif note:
+            inner = f'<p class="empty-mini">{esc(note)}</p>'
+            submit = ""
         else:
             inner = '<p class="empty-mini">Nothing added yet.</p>'
         cols.append(
             f'<div class="res-col"><h3>{label} <span class="badge">{len(items)}</span></h3>'
-            f'{inner}'
-            f'<a class="res-submit" href="{esc(issue_url(s, sm, label))}" target="_blank" rel="noopener">Submit {label.lower()} →</a></div>')
+            f'{inner}{submit}</div>')
     res_block = '<div class="res-grid">' + "".join(cols) + "</div>"
     res_head = ('<p class="meta">Material is added subject by subject and reviewed before it appears. '
                 'Nothing here yet? Use a submit link — it opens a prefilled issue on GitHub.</p>')

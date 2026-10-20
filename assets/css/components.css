@@ -56,3 +56,4 @@ a.card:hover{transform:translateY(-2px);border-color:var(--primary-strong);box-s
 .res-list li{display:flex;justify-content:space-between;gap:.6rem;padding:.35rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
 .empty-mini{font-size:.86rem;color:var(--muted);margin:0 0 .6rem}
 .res-submit{font-size:.84rem;font-weight:600}
+.sem-note{margin-bottom:1.2rem}
