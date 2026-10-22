@@ -40,6 +40,20 @@ resources/              rights-cleared files only
 SIGN_IN_URL=https://<staff-service>/login python3 build/generate.py
 ```
 
+## Live material
+
+Subject pages can load published material **live** from the staff service, so students see
+updates the moment a department publishes — no rebuild. Set `API_BASE` and regenerate:
+
+```bash
+API_BASE=https://<staff-service> python3 build/generate.py
+```
+
+With it set, each subject page includes `assets/js/material.js`, which calls
+`<API_BASE>/api/public/library` and fills the material sections. If the service is unreachable,
+the page falls back to whatever the catalogue contains. With `API_BASE` empty, the pages are
+fully static.
+
 ## Deployment
 
 Served by GitHub Pages at <https://kartik-h6.github.io/e-library/> via

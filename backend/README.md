@@ -65,6 +65,9 @@ One staff login page at `/login`. Accounts:
   audit trail in `revisions`.
 - **Published preview** — a read-only `/library` showing exactly what the public site shows.
 - **Publish** — exports every published resource into the frontend's `data/catalogue.json`.
+- **Public API** — `GET /api/public/library` returns published material grouped by subject code,
+  with no authentication. The frontend calls it at page load so students see new material live.
+  CORS is enabled for it (`CORS_ORIGINS`, default `*` — it is public, read-only data).
 
 ## What's deliberately not here
 

@@ -20,6 +20,9 @@ KINDS = [("notes", "Notes & PDFs", ""),
 ISSUES_URL = "https://github.com/kartik-h6/e-library/issues/new"
 # Optional: the hosted backend's sign-in URL. Empty hides the "Sign in" link in the nav.
 SIGN_IN_URL = os.environ.get("SIGN_IN_URL", "")
+# Optional: the staff service's base URL. When set, subject pages load published material live
+# from its public API, so students see updates without a rebuild.
+API_BASE = os.environ.get("API_BASE", "")
 
 
 def issue_url(s, sm, kind_label):
@@ -259,6 +262,56 @@ document.addEventListener('DOMContentLoaded', function(){
   if(window.Nav) window.Nav.init();
   if(document.getElementById('q') && window.Search) window.Search.init();
 });"""
+
+JS_MATERIAL = """/* material.js — live material for a subject page.
+   Fetches published resources from the staff library so students see updates without a
+   rebuild. No-ops when no API base is configured, leaving the static fallback in place. */
+(function () {
+  var box = document.querySelector('[data-material]');
+  if (!box) return;
+  var api = (box.getAttribute('data-api') || '').replace(/\\/+$/, '');
+  var code = box.getAttribute('data-code');
+  if (!api || !code) return;
+  var note = document.getElementById('live-note');
+
+  function safeUrl(u) {
+    return (typeof u === 'string' && /^(https?:\\/\\/|\\/)/.test(u)) ? u : '';
+  }
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = (s == null ? '' : String(s));
+    return d.innerHTML;
+  }
+
+  fetch(api + '/api/public/library', { headers: { 'Accept': 'application/json' } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (!data || !data.subjects) return;
+      var items = data.subjects[code] || [];
+      var byKind = {};
+      items.forEach(function (it) { (byKind[it.type] = byKind[it.type] || []).push(it); });
+      box.querySelectorAll('[data-kind]').forEach(function (col) {
+        var list = byKind[col.getAttribute('data-kind')] || [];
+        var count = col.querySelector('[data-count]');
+        if (count) count.textContent = list.length;
+        var body = col.querySelector('.res-body');
+        if (!body) return;
+        if (list.length) {
+          body.innerHTML = '<ul class="res-list">' + list.map(function (r) {
+            var url = safeUrl(r.url);
+            var link = url ? ' <a href="' + esc(url) + '" target="_blank" rel="noopener">Open</a>' : '';
+            return '<li><span>' + esc(r.title) + '</span>' + link + '</li>';
+          }).join('') + '</ul>';
+        }
+      });
+      if (note) {
+        note.textContent = items.length
+          ? 'Live from the staff library — ' + items.length + ' item(s), updated as staff publish.'
+          : 'No published material for this subject yet.';
+      }
+    })
+    .catch(function () { /* not configured or offline: keep the static fallback */ });
+})();"""
 
 LOGO = """<svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="RIPER e-Library logo" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -577,11 +630,13 @@ def build_subject(sm, s):
         else:
             inner = '<p class="empty-mini">Nothing added yet.</p>'
         cols.append(
-            f'<div class="res-col"><h3>{label} <span class="badge">{len(items)}</span></h3>'
-            f'{inner}{submit}</div>')
-    res_block = '<div class="res-grid">' + "".join(cols) + "</div>"
-    res_head = ('<p class="meta">Material is added subject by subject and reviewed before it appears. '
-                'Nothing here yet? Use a submit link — it opens a prefilled issue on GitHub.</p>')
+            f'<div class="res-col" data-kind="{kind}"><h3>{label} '
+            f'<span class="badge" data-count>{len(items)}</span></h3>'
+            f'<div class="res-body">{inner}</div>{submit}</div>')
+    res_block = (f'<div class="res-grid" data-material data-code="{esc(s["code"])}" '
+                 f'data-api="{esc(API_BASE)}">' + "".join(cols) + "</div>")
+    res_head = ('<p class="meta" id="live-note">Material is added subject by subject and reviewed before '
+                'it appears. Nothing here yet? Use a submit link — it opens a prefilled issue on GitHub.</p>')
     body = f"""{breadcrumbs(root, trail)}
 <div class="row" style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap">
   <div>
@@ -598,9 +653,11 @@ def build_subject(sm, s):
   <p class="meta">Structure sourced from the PCI B.Pharm syllabus 2026 (NEP 2020) — interim source.
   Corrections welcome via the <a href="{root}contact/index.html">contact page</a>.</p>
 </section>"""
+    scripts = '<script src="../../assets/js/material.js"></script>' if API_BASE else ""
     write(f'semester-{sm["number"]}/{s["slug"]}/index.html',
           shell(f'{s["code"]} {s["title"]} — RIPER e-Library',
-                f'{s["title"]} ({s["code"]}), {sm["label"]} — units and study material.', root, body))
+                f'{s["title"]} ({s["code"]}), {sm["label"]} — units and study material.',
+                root, body, extra_scripts=scripts))
 
 
 def build_about():
@@ -680,6 +737,7 @@ def build_assets():
     write("assets/js/navigation.js", JS_NAVIGATION)
     write("assets/js/search.js", JS_SEARCH)
     write("assets/js/app.js", JS_APP)
+    write("assets/js/material.js", JS_MATERIAL)
     write("assets/logo/logo.svg", LOGO)
     write("assets/logo/favicon.svg", LOGO)
     write("data/schema.json", json.dumps(SCHEMA, indent=2))

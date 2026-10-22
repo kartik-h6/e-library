@@ -9,9 +9,11 @@ the static site's catalogue. See docs/DASHBOARD_DESIGN.md.
 import os
 import uuid
 from contextlib import asynccontextmanager
+from datetime import datetime
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -29,6 +31,8 @@ SECRET = os.environ.get("SESSION_SECRET", "dev-secret-change-me")
 DRIVE_FOLDER = os.environ.get("DRIVE_FOLDER_URL", "")
 # The public library site, linked from the staff header.
 PUBLIC_SITE = os.environ.get("PUBLIC_SITE_URL", "https://kartik-h6.github.io/e-library/")
+# Origins allowed to read the public material API. "*" is fine: it is public, read-only data.
+ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("CORS_ORIGINS", "*").split(",") if o.strip()]
 
 ACTION_STATUS = {"submit": "needs-review", "approve": "verified",
                  "publish": "published", "archive": "archived", "reopen": "draft"}
@@ -43,6 +47,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="RIPER e-Library Admin (scaffold)", lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=SECRET, same_site="lax")
+app.add_middleware(CORSMiddleware, allow_origins=ALLOWED_ORIGINS,
+                   allow_methods=["GET"], allow_headers=["*"])
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -321,6 +327,32 @@ def library(request: Request, db=Depends(get_db)):
         groups.setdefault(r.subject_id, []).append(r)
     subjects = {s.id: s for s in db.query(Subject).all()}
     return page(request, db, "library.html", groups=groups, subjects=subjects, total=len(rows))
+
+
+# ---------------------------------------------------------------- public API (no auth)
+
+@app.get("/api/public/library")
+def public_library(db=Depends(get_db)):
+    """Public, read-only: published material grouped by subject code.
+
+    This is what the frontend calls at page load so students see material the moment a
+    department publishes it — no rebuild required. Anonymous, so it exposes only what is
+    already published.
+    """
+    codes = {s.id: s.code for s in db.query(Subject).all()}
+    rows = (db.query(Resource)
+            .filter(Resource.status == "published", Resource.archived.is_(False))
+            .order_by(Resource.subject_id, Resource.id.desc()).all())
+    out = {}
+    for r in rows:
+        code = codes.get(r.subject_id)
+        if not code:
+            continue
+        out.setdefault(code, []).append({
+            "title": r.title, "type": r.type, "language": r.language,
+            "source": r.source, "url": r.url, "lastChecked": r.last_checked,
+        })
+    return {"generatedAt": datetime.utcnow().isoformat() + "Z", "subjects": out}
 
 
 # ---------------------------------------------------------------- review & publish

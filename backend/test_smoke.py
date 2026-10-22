@@ -124,6 +124,16 @@ with TestClient(app) as c:
     check("uploaded resource created", up is not None and up.url.startswith("/uploads/"),
           up.url if up else "none")
 
+    print("Public material API (no auth)")
+    c5 = TestClient(app)
+    r = c5.get("/api/public/library")
+    check("public API reachable without auth", r.status_code == 200, str(r.status_code))
+    data = r.json() if r.status_code == 200 else {}
+    titles = [x["title"] for v in data.get("subjects", {}).values() for x in v]
+    check("public API exposes published material", "Unit 1 — demo notes" in titles)
+    check("public API hides unpublished material", "Uploaded demo" not in titles)
+    check("public API groups by subject code", "BP101T" in data.get("subjects", {}))
+
     db.close()
 
 print(f"\n{ok} passed, {len(fail)} failed")
