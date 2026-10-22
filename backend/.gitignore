@@ -3,4 +3,5 @@ __pycache__/
 .venv/
 .env
 *.db
-data/published-test.json
+uploads/
+data/

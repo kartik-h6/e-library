@@ -1,7 +1,11 @@
-# Python (admin app)
+# Python (backend)
 __pycache__/
 *.pyc
 .venv/
 .env
 *.db
-admin/data/
+
+# local state that must not be committed
+backend/uploads/
+backend/data/
+frontend/data/published-test.json

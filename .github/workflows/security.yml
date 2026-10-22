@@ -1,0 +1,19 @@
+name: Security checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install backend dependencies
+        run: pip install --quiet -r backend/requirements.txt jsonschema
+      - name: Run security & release checks
+        run: python3 security/check.py

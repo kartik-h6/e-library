@@ -101,6 +101,29 @@ with TestClient(app) as c:
     db.expire_all(); db.refresh(res)
     check("SME publish attempt ignored", res.status == "published")  # already published; ensure no crash
 
+    print("Universal student login")
+    c3 = TestClient(app)
+    r = c3.post("/login", data={"email": "student", "password": "library2026"}, follow_redirects=False)
+    check("student logs in → /library", r.status_code == 303 and r.headers.get("location") == "/library",
+          str(r.headers.get("location")))
+    r = c3.get("/library")
+    check("student library renders", r.status_code == 200 and "Library" in r.text)
+    r = c3.get("/subjects", follow_redirects=False)
+    check("student blocked from admin pages", r.status_code == 303 and r.headers.get("location") == "/library",
+          str(r.headers.get("location")))
+
+    print("Source upload")
+    csrf_admin = csrf_of(c.get("/dashboard").text)
+    files = {"file": ("demo-notes.txt", b"hello notes", "text/plain")}
+    r = c.post(f"/subjects/{sid}/upload",
+               data={"csrf": csrf_admin, "type": "notes", "title": "Uploaded demo", "unit_id": ""},
+               files=files, follow_redirects=False)
+    check("upload accepted", r.status_code == 303, str(r.status_code))
+    db.expire_all()
+    up = db.query(Resource).filter(Resource.source == "upload").order_by(Resource.id.desc()).first()
+    check("uploaded resource created", up is not None and up.url.startswith("/uploads/"),
+          up.url if up else "none")
+
     db.close()
 
 print(f"\n{ok} passed, {len(fail)} failed")

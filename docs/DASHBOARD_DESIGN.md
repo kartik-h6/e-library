@@ -6,7 +6,7 @@
 
 ## 1. Purpose
 
-Today the library is static: `data/catalogue.json` is edited by hand and the site is regenerated. That does not scale to 88 subjects across departments, and it makes one person the bottleneck for every correction.
+Today the library is static: `frontend/data/catalogue.json` is edited by hand and the site is regenerated. That does not scale to 88 subjects across departments, and it makes one person the bottleneck for every correction.
 
 This design proposes a small admin dashboard so that each department's **HOD** or a **subject-matter expert (SME)** can manage their own subjects' material through CRUD operations, with a review step before anything reaches the public site.
 
@@ -74,7 +74,7 @@ Extends the existing catalogue schema (see `DATA_MODEL.md`).
 
 `resource.type` is one of `notes | paper | manual | book | other` — the same four sections the public site already renders.
 
-The public site consumes a **published projection** of this model (today: `data/catalogue.json`).
+The public site consumes a **published projection** of this model (today: `frontend/data/catalogue.json`).
 
 ---
 
@@ -156,7 +156,7 @@ Either way the shape is the same: one small service, server-enforced roles, an a
 
 ## 10. How it connects to the static site
 
-**Option 1 — build-time (recommended).** The dashboard writes to the database. A **Publish** action exports the `published` rows to `data/catalogue.json` and commits it; the existing generator rebuilds the static pages. The site stays static, fast and free; there is no runtime API to secure or pay for.
+**Option 1 — build-time (recommended).** The dashboard writes to the database. A **Publish** action exports the `published` rows to `frontend/data/catalogue.json` and commits it; the existing generator rebuilds the static pages. The site stays static, fast and free; there is no runtime API to secure or pay for.
 
 **Option 2 — runtime.** The site fetches a read-only JSON API. More moving parts and a permanent service to keep alive; only worth it if genuinely live updates are needed.
 

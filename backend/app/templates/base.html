@@ -11,10 +11,14 @@
 <header class="topbar">
   <a class="brand" href="/dashboard">RIPER e-Library <span>Admin</span></a>
   <nav>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/subjects">Subjects</a>
-    <a href="/review">Review</a>
-    <a href="/publish">Publish</a>
+    {% if user.role == 'student' %}
+      <a href="/library">Library</a>
+    {% else %}
+      <a href="/dashboard">Dashboard</a>
+      <a href="/subjects">Subjects</a>
+      <a href="/review">Review</a>
+      <a href="/publish">Publish</a>
+    {% endif %}
   </nav>
   <div class="who">
     <span class="name">{{ user.name }}</span>

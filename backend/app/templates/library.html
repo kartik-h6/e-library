@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Library — RIPER e-Library{% endblock %}
+{% block body %}
+<h1>Library</h1>
+<p class="muted">Published study material — read only.</p>
+
+<table class="tbl">
+  <thead><tr><th>Subject</th><th>Title</th><th>Type</th><th>Language</th><th></th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td class="mono">{{ subjects[r.subject_id].code if subjects.get(r.subject_id) else '—' }}</td>
+      <td>{{ r.title }}</td>
+      <td>{{ r.type }}</td>
+      <td>{{ r.language }}</td>
+      <td>{% if r.url %}<a href="{{ r.url }}" target="_blank" rel="noopener">open</a>{% else %}<span class="muted">—</span>{% endif %}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="muted">Nothing published yet. Material appears here once a department publishes it.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

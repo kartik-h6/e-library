@@ -69,6 +69,11 @@ def require_user(request: Request, db) -> User:
 
 # ---------------------------------------------------------------- permissions
 
+def is_student(user: User) -> bool:
+    """The shared student account — read-only access to published material."""
+    return user.role == "student"
+
+
 def can_manage_subjects(user: User) -> bool:
     return user.role in ("super_admin", "hod")
 

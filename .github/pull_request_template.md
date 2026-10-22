@@ -28,14 +28,14 @@
 - [ ] Contrast, semantics and labels checked
 
 **Catalogue & Build QA (@arjungupta001)**
-- [ ] `data/catalogue.json` validates against `data/schema.json`
-- [ ] `python3 build/generate.py` runs clean
+- [ ] `frontend/data/catalogue.json` validates against `frontend/data/schema.json`
+- [ ] `python3 frontend/build/generate.py` runs clean
 - [ ] Publish path verified (if touched)
 
 **Security / Release Validator**
 - [ ] Server-side authorisation intact; no client-side gate
 - [ ] No secrets added; `.env` / `*.db` ignored
-- [ ] `python3 admin/test_smoke.py` passes
+- [ ] `python3 backend/test_smoke.py` passes
 - [ ] Rollback: previous good commit recorded
 
 ## Orchestrator approval

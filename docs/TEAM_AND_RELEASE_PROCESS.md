@@ -98,15 +98,15 @@ The `main` branch is protected: changes must arrive by pull request.
 - [ ] Form labels present.
 
 ### 5.3 Catalogue & build
-- [ ] `data/catalogue.json` validates against `data/schema.json`.
-- [ ] `python3 build/generate.py` runs clean and produces the expected page count.
+- [ ] `frontend/data/catalogue.json` validates against `frontend/data/schema.json`.
+- [ ] `python3 frontend/build/generate.py` runs clean and produces the expected page count.
 - [ ] No orphaned or duplicate routes.
 - [ ] No broken internal links on the pages touched.
 
 ### 5.4 Security & release
 - [ ] Authorisation is server-side on every admin route (ADR-003); no client-side gate.
 - [ ] No secrets in the repo or its history; `.env` and `*.db` ignored.
-- [ ] Regression: `python3 admin/test_smoke.py` passes (currently 19 checks).
+- [ ] Regression: `python3 backend/test_smoke.py` passes (currently 19 checks).
 - [ ] Deployment readiness and a rollback path are recorded for a release.
 
 ---

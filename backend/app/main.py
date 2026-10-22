@@ -7,10 +7,11 @@ the static site's catalogue. See docs/DASHBOARD_DESIGN.md.
     uvicorn app.main:app --reload
 """
 import os
+import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Form, Request
+from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -39,6 +40,9 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="RIPER e-Library Admin (scaffold)", lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=SECRET, same_site="lax")
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+UPLOAD_DIR = BASE_DIR / "uploads"
+UPLOAD_DIR.mkdir(exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 templates = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
 
 
@@ -52,10 +56,20 @@ def page(request: Request, db, name: str, **extra):
 
 
 def gate(request: Request, db):
-    """Return (user, None) or (None, redirect)."""
+    """Return (user, None) or (None, redirect). Any signed-in user passes."""
     user = security.current_user(request, db)
     if not user or not user.active:
         return None, RedirectResponse("/login", status_code=303)
+    return user, None
+
+
+def gate_staff(request: Request, db):
+    """Like gate(), but the shared student account is sent to the read-only library."""
+    user, redir = gate(request, db)
+    if redir:
+        return None, redir
+    if security.is_student(user):
+        return None, RedirectResponse("/library", status_code=303)
     return user, None
 
 
@@ -73,10 +87,12 @@ def scoped_subjects(db, user):
 
 # ---------------------------------------------------------------- auth
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 def home(request: Request, db=Depends(get_db)):
     user, redir = gate(request, db)
-    return redir or RedirectResponse("/dashboard", status_code=303)
+    if redir:
+        return redir
+    return RedirectResponse("/library" if security.is_student(user) else "/dashboard", status_code=303)
 
 
 @app.get("/login", response_class=HTMLResponse)
@@ -91,7 +107,7 @@ def login(request: Request, db=Depends(get_db),
     if not user or not security.verify_password(password, user.password_hash) or not user.active:
         return page(request, db, "login.html", error="Invalid email or password.")
     security.login_session(request, user)
-    return RedirectResponse("/dashboard", status_code=303)
+    return RedirectResponse("/library" if security.is_student(user) else "/dashboard", status_code=303)
 
 
 @app.post("/logout")
@@ -105,7 +121,7 @@ def logout(request: Request, csrf: str = Form("")):
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard(request: Request, db=Depends(get_db)):
-    user, redir = gate(request, db)
+    user, redir = gate_staff(request, db)
     if redir:
         return redir
     subjects = scoped_subjects(db, user)
@@ -121,7 +137,7 @@ def dashboard(request: Request, db=Depends(get_db)):
 
 @app.get("/subjects", response_class=HTMLResponse)
 def subjects(request: Request, db=Depends(get_db)):
-    user, redir = gate(request, db)
+    user, redir = gate_staff(request, db)
     if redir:
         return redir
     return page(request, db, "subjects.html", subjects=scoped_subjects(db, user),
@@ -154,7 +170,7 @@ def create_subject(request: Request, db=Depends(get_db),
 
 @app.get("/subjects/{sid}", response_class=HTMLResponse)
 def subject_detail(sid: int, request: Request, db=Depends(get_db)):
-    user, redir = gate(request, db)
+    user, redir = gate_staff(request, db)
     if redir:
         return redir
     subject = db.get(Subject, sid)
@@ -263,11 +279,49 @@ def delete_resource(rid: int, request: Request, db=Depends(get_db), csrf: str = 
     return RedirectResponse("/subjects", status_code=303)
 
 
+# ---------------------------------------------------------------- upload & student library
+
+@app.post("/subjects/{sid}/upload")
+async def upload_source(sid: int, request: Request, db=Depends(get_db),
+                        csrf: str = Form(""), type: str = Form("notes"), title: str = Form(""),
+                        unit_id: str = Form(""), file: UploadFile = File(...)):
+    """A department master (or the maintainer) uploads a source file for a subject."""
+    user, redir = gate_staff(request, db)
+    if redir:
+        return redir
+    security.check_csrf(request, csrf)
+    subject = db.get(Subject, sid)
+    if not (subject and security.in_scope(user, subject) and security.can_edit_resources(user)):
+        return RedirectResponse(f"/subjects/{sid}", status_code=303)
+    safe = os.path.basename(file.filename or "file")
+    name = f"{uuid.uuid4().hex[:8]}-{safe}"
+    (UPLOAD_DIR / name).write_bytes(await file.read())
+    db.add(Resource(subject_id=sid, unit_id=int(unit_id) if unit_id else None, type=type,
+                    title=(title.strip() or safe), url=f"/uploads/{name}", source="upload",
+                    status="draft", created_by=user.id))
+    log(db, "resource", sid, "upload", user.id, name)
+    db.commit()
+    return RedirectResponse(f"/subjects/{sid}", status_code=303)
+
+
+@app.get("/library", response_class=HTMLResponse)
+def library(request: Request, db=Depends(get_db)):
+    """Read-only view of published material — what the shared student login sees."""
+    user, redir = gate(request, db)
+    if redir:
+        return redir
+    rows = (db.query(Resource)
+            .filter(Resource.status == "published", Resource.archived.is_(False))
+            .order_by(Resource.subject_id, Resource.id.desc()).all())
+    subjects = {s.id: s for s in db.query(Subject).all()}
+    return page(request, db, "library.html", rows=rows, subjects=subjects)
+
+
 # ---------------------------------------------------------------- review & publish
 
 @app.get("/review", response_class=HTMLResponse)
 def review(request: Request, db=Depends(get_db)):
-    user, redir = gate(request, db)
+    user, redir = gate_staff(request, db)
     if redir:
         return redir
     ids = [s.id for s in scoped_subjects(db, user)]
@@ -280,7 +334,7 @@ def review(request: Request, db=Depends(get_db)):
 
 @app.get("/publish", response_class=HTMLResponse)
 def publish_page(request: Request, db=Depends(get_db)):
-    user, redir = gate(request, db)
+    user, redir = gate_staff(request, db)
     if redir:
         return redir
     return page(request, db, "publish.html", can_publish=security.can_publish(user),

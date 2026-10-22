@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
     pass
 
 
-ROLES = ("super_admin", "hod", "sme", "contributor")
+ROLES = ("super_admin", "hod", "sme", "contributor", "student")
 RESOURCE_TYPES = ("notes", "paper", "manual", "book", "other")
 STATUSES = ("draft", "needs-review", "verified", "published", "archived")
 

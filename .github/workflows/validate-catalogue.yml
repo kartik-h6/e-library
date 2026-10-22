@@ -3,8 +3,8 @@ name: Validate catalogue
 on:
   push:
     paths:
-      - 'data/catalogue.json'
-      - 'data/schema.json'
+      - 'frontend/data/catalogue.json'
+      - 'frontend/data/schema.json'
   pull_request:
 
 jobs:
@@ -19,6 +19,6 @@ jobs:
       - name: Validate catalogue against schema
         run: |
           python -c "import json, jsonschema; \
-            jsonschema.validate(json.load(open('data/catalogue.json')), \
-                                json.load(open('data/schema.json'))); \
-            print('catalogue.json validates against schema.json')"
+            jsonschema.validate(json.load(open('frontend/data/catalogue.json')), \
+                                json.load(open('frontend/data/schema.json'))); \
+            print('frontend/data/catalogue.json validates against schema.json')"

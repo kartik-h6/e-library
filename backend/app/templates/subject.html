@@ -95,5 +95,28 @@
     <button class="btn">Add resource (as draft)</button>
   </form>
 </details>
+
+<details class="panel">
+  <summary>Upload a source file</summary>
+  <form method="post" action="/subjects/{{ subject.id }}/upload" enctype="multipart/form-data" class="grid-form">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <label>Type
+      <select name="type">
+        <option value="notes">notes</option><option value="paper">paper</option>
+        <option value="manual">manual</option><option value="book">book</option>
+        <option value="other">other</option>
+      </select>
+    </label>
+    <label>Title <input name="title" placeholder="Optional — defaults to the file name"></label>
+    <label>Unit (optional)
+      <select name="unit_id">
+        <option value="">— none —</option>
+        {% for u in units %}<option value="{{ u.id }}">Unit {{ u.seq }} — {{ u.title }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>File <input type="file" name="file" required></label>
+    <button class="btn">Upload (as draft)</button>
+  </form>
+</details>
 {% endif %}
 {% endblock %}
