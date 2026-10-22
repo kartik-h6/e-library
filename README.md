@@ -44,10 +44,12 @@ Accounts created on first start:
 | Super Admin | `admin@riper.test` | `admin123` | everything |
 | Department master (one per department) | `master.pce@dept.riper.test` (etc.) | `dept123` | CRUD that department's subjects + upload sources |
 | SME (demo) | `sme.pharmacology@riper.test` | `sme123` | submit material, cannot publish |
-| **Student (shared, universal)** | `student` | `library2026` | read-only library |
 
-> These are demo credentials. Change them, and set `STUDENT_PASSWORD` / `DEPT_MASTER_PASSWORD`
-> in the environment before any real use.
+**Students have no accounts** — they read the public site anonymously. Material is kept in one
+shared Google Drive folder (`DRIVE_FOLDER_URL`); the catalogue links to it.
+
+> These are demo credentials. Change them, and set `DEPT_MASTER_PASSWORD` in the environment
+> before any real use.
 
 ## Security checks
 

@@ -6,8 +6,9 @@ Accounts created
 ----------------
 * Super Admin        — one, full control.
 * Department master  — one per department; CRUD on that department's subjects and sources.
-* Student (shared)   — a single universal student login used by every student.
 * SME (demo)         — a subject-matter expert who can submit but not publish.
+
+Students do not have accounts: they read the public site anonymously.
 """
 import json
 import os
@@ -31,11 +32,6 @@ DEPARTMENTS = [
 # One master account per department. Change before any real use.
 DEPT_MASTER_PASSWORD = os.environ.get("DEPT_MASTER_PASSWORD", "dept123")
 DEPT_MASTER_EMAIL = "master.{code}@dept.riper.test"
-
-# The universal student login — the same credentials for every student.
-STUDENT_ID = os.environ.get("STUDENT_ID", "student")
-STUDENT_PASSWORD = os.environ.get("STUDENT_PASSWORD", "library2026")
-
 
 def slugify(text: str) -> str:
     return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", text.lower())).strip("-")
@@ -88,10 +84,6 @@ def seed() -> None:
                         password_hash=hash_password("sme123"),
                         role="sme", department_id=dept_by_code.get("PCO")))
 
-            # the shared student login
-            db.add(User(name="Student (shared)", email=STUDENT_ID,
-                        password_hash=hash_password(STUDENT_PASSWORD),
-                        role="student", department_id=None))
             db.commit()
 
         if db.query(Subject).count() == 0:

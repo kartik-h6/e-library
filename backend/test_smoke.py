@@ -101,17 +101,6 @@ with TestClient(app) as c:
     db.expire_all(); db.refresh(res)
     check("SME publish attempt ignored", res.status == "published")  # already published; ensure no crash
 
-    print("Universal student login")
-    c3 = TestClient(app)
-    r = c3.post("/login", data={"email": "student", "password": "library2026"}, follow_redirects=False)
-    check("student logs in → /library", r.status_code == 303 and r.headers.get("location") == "/library",
-          str(r.headers.get("location")))
-    r = c3.get("/library")
-    check("student library renders", r.status_code == 200 and "Library" in r.text)
-    r = c3.get("/subjects", follow_redirects=False)
-    check("student blocked from admin pages", r.status_code == 303 and r.headers.get("location") == "/library",
-          str(r.headers.get("location")))
-
     print("Source upload")
     csrf_admin = csrf_of(c.get("/dashboard").text)
     files = {"file": ("demo-notes.txt", b"hello notes", "text/plain")}

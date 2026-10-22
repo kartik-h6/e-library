@@ -1,11 +1,22 @@
 # backend/
 
-A small FastAPI service that implements the design in
-[`docs/DASHBOARD_DESIGN.md`](../docs/DASHBOARD_DESIGN.md): server-enforced roles, CRUD for
-subjects / units / resources, a review workflow, source upload, and a **Publish** action that
-writes the frontend's catalogue.
+A small FastAPI service where **faculty** manage the library's material: server-enforced roles,
+CRUD for subjects / units / resources, a review workflow, and a **Publish** action that writes the
+frontend's catalogue. See [`docs/DASHBOARD_DESIGN.md`](../docs/DASHBOARD_DESIGN.md).
 
 This is a **scaffold** — enough to put in front of a department — not a finished product.
+
+## Who uses it
+
+- **Students do not have accounts.** They read the public site anonymously.
+- **Staff** sign in to manage their department's subjects and material.
+
+## Where material lives
+
+Source files are kept in **one shared Google Drive folder** (set `DRIVE_FOLDER_URL`, and staff see
+a link to it on every subject page). A resource in the library is a **link** to a file in that
+folder — the catalogue stores the URL, not the bytes. Access control therefore lives in Drive's
+sharing settings, and the library is a curated index over it.
 
 ## Stack
 
@@ -30,47 +41,36 @@ real 8-semester, 88-subject catalogue — distributed by department.
 
 ## Sign in
 
-One neutral login page at `/login` — it does not presume a role. Enter a student ID or an email:
+One staff login page at `/login`. Accounts:
 
-- **Students** land in the read-only **library** (`/library`) — they are viewers.
-- **Department masters, SMEs and the Super Admin** land in the **dashboard** — they are the
-  contributors who create, edit, upload and publish the library's material.
-
-## Accounts
-
-| Role | Login | Password | Scope |
+| Role | Login | Password | Can |
 |---|---|---|---|
 | Super Admin | `admin@riper.test` | `admin123` | everything |
 | Department master | `master.pce@dept.riper.test` | `dept123` | CRUD own department's subjects, upload sources |
 | Department master | `master.pco@dept.riper.test` | `dept123` | …and so on for pch, pgr, ppr, gen |
 | SME (demo) | `sme.pharmacology@riper.test` | `sme123` | own department, submit only, cannot publish |
-| **Student (shared)** | `student` | `library2026` | read-only library |
 
-The **student login is one universal credential shared by every student** — the same ID and
-password for all, as the college's existing digital library worked. Students land on a read-only
-`/library` listing published material; they cannot reach any admin page.
-
-> Demo credentials only. Change them, and set `STUDENT_PASSWORD` / `DEPT_MASTER_PASSWORD` in the
-> environment before real use.
+> Demo credentials only. Change them, and set `DEPT_MASTER_PASSWORD` in the environment before
+> real use.
 
 ## What's implemented
 
 - **Auth** — email + password, PBKDF2 hashes, signed session cookie, CSRF on every POST.
-- **Roles** — `super_admin`, `hod` (department master), `sme`, `contributor`, `student` — enforced
-  in the route handlers, never in the browser.
+- **Roles** — `super_admin`, `hod` (department master), `sme`, `contributor` — enforced in the
+  route handlers, never in the browser.
 - **Department scoping** — a department master only sees and acts on their own department.
 - **CRUD** — create subjects, add/remove units, create resources; soft-delete.
-- **Source upload** — upload a file to a subject; it is stored under `uploads/` and added as a draft.
+- **Source upload** — upload a file, or add a link to the shared Drive folder.
 - **Workflow** — `draft → needs-review → verified → published → archived`, with role checks and an
   audit trail in `revisions`.
-- **Student library** — read-only `/library` view of published material.
+- **Published preview** — a read-only `/library` showing exactly what the public site shows.
 - **Publish** — exports every published resource into the frontend's `data/catalogue.json`.
 
 ## What's deliberately not here
 
 - Per-subject SME assignment (scoping is by department).
 - Password reset, email verification, 2FA.
-- Object storage — uploads are local files; move to S3-compatible storage before real use.
+- Object storage — uploads are local files; the Drive folder is the intended store.
 - Alembic migrations (tables are created from the models on start).
 
 ## Configuration
@@ -79,9 +79,8 @@ password for all, as the college's existing digital library worked. Students lan
 |---|---|---|
 | `DATABASE_URL` | `sqlite:///./elib.db` | database connection |
 | `SESSION_SECRET` | `dev-secret-change-me` | signs the session cookie — **change it** |
-| `STUDENT_ID` | `student` | the universal student login |
-| `STUDENT_PASSWORD` | `library2026` | the universal student password |
 | `DEPT_MASTER_PASSWORD` | `dept123` | password for every department master |
+| `DRIVE_FOLDER_URL` | *(empty)* | shared Drive folder link shown to staff |
 | `CATALOGUE_SRC` | `../frontend/data/catalogue.json` | seed source |
 | `PUBLISH_PATH` | `../frontend/data/catalogue.json` | publish target |
 
@@ -91,5 +90,4 @@ password for all, as the college's existing digital library worked. Students lan
 python3 test_smoke.py
 ```
 
-Covers login, CSRF, role scoping, the resource workflow, publish, the universal student login and
-source upload (24 checks).
+Covers login, CSRF, role scoping, the resource workflow, publish and source upload.

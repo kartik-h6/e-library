@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Library — RIPER e-Library{% endblock %}
+{% block title %}Published — RIPER e-Library{% endblock %}
 {% block body %}
-<h1>Library</h1>
-<p class="muted">{{ total }} published item(s) across {{ groups|length }} subject(s). Read only.</p>
+<h1>Published material</h1>
+<p class="muted">{{ total }} published item(s) across {{ groups|length }} subject(s) — this is what the public site shows.</p>
 
 {% if groups %}
 <div class="search-box">

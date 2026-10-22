@@ -117,6 +117,10 @@
     <label>File <input type="file" name="file" required></label>
     <button class="btn">Upload (as draft)</button>
   </form>
+  {% if drive_folder %}
+  <p class="meta">Keep the source files in the shared Drive folder:
+    <a href="{{ drive_folder }}" target="_blank" rel="noopener">open folder</a></p>
+  {% endif %}
 </details>
 {% endif %}
 {% endblock %}
