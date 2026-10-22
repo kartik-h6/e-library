@@ -411,6 +411,8 @@ def shell(title, desc, root, body, active="", extra_scripts="", data_root=None):
         staff_href, ' aria-current="page"' if active == "staff" else '')
     footer_links = " · ".join('<a href="%s%s">%s</a>' % (root, h, n) for h, n, k in nav)
     footer_links += ' · <a href="%s">Staff</a>' % staff_href
+    footer_links += (' · <a href="%sprivacy/index.html">Privacy</a>'
+                     ' · <a href="%sterms/index.html">Terms</a>') % (root, root)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -773,6 +775,67 @@ def build_staff():
           "How students and staff access the RIPER e-Library.", "../", body, active="staff"))
 
 
+def build_privacy():
+    body = f"""{breadcrumbs('../', [("Home","index.html"),("Privacy",None)])}
+<h1>Privacy</h1>
+<p class="lead">Short version: students are anonymous, and there is nothing to collect.</p>
+<section class="section">
+  <h2>What we collect</h2>
+  <p>Nothing about students. There are no student accounts, no sign-in, no tracking cookies and no
+  analytics on this site. Reading the library leaves no trace beyond ordinary web-server logs.</p>
+</section>
+<section class="section">
+  <h2>What is held</h2>
+  <ul>
+    <li><b>Staff accounts</b> — name, email and a hashed password, so staff can sign in.
+      Passwords are hashed (PBKDF2) and never stored in plain text.</li>
+    <li><b>Content and its history</b> — the material, plus an audit trail of who changed what.</li>
+    <li><b>Standard server logs</b> — IP, path and time, kept by the host for security only.</li>
+  </ul>
+</section>
+<section class="section">
+  <h2>What we do not do</h2>
+  <ul>
+    <li>No analytics, ads or trackers.</li>
+    <li>No third-party CDN, fonts or scripts — everything is served from this site.</li>
+    <li>No names, phone numbers, marks, attendance or any student record.</li>
+    <li>Nothing is sold or shared with anyone.</li>
+  </ul>
+</section>
+<section class="section">
+  <h2>Material</h2>
+  <p>Study material is kept in a shared Google Drive folder; Google's own terms and privacy policy
+  apply to that folder. This site stores only links to it.</p>
+</section>
+<section class="section">
+  <h2>Questions</h2>
+  <p>To ask about or correct anything held, use the <a href="../contact/index.html">contact page</a>.</p>
+</section>"""
+    write("privacy/index.html", shell("Privacy — RIPER e-Library",
+          "Privacy: students are anonymous; nothing is collected about them.", "../", body))
+
+
+def build_terms():
+    body = f"""{breadcrumbs('../', [("Home","index.html"),("Terms",None)])}
+<h1>Terms of use</h1>
+<section class="section">
+  <ul>
+    <li>This is a <b>student-built study aid</b>, not an official publication of RIPER, and is not
+      endorsed by or affiliated with the college or the Pharmacy Council of India.</li>
+    <li>The course structure follows the <b>PCI B.Pharm syllabus 2026 (NEP 2020)</b> as an interim
+      source until RIPER's own syllabus is supplied and verified. Always check the official syllabus.</li>
+    <li>Material is provided <b>as-is, without warranty</b>. Verify anything you rely on.</li>
+    <li>Do not submit copyrighted material you have no right to share, paid coaching material,
+      restricted institutional files, or personal or confidential data.</li>
+    <li>The maintainer may edit, move or remove content, and may suspend access, at any time.</li>
+    <li>The maintainer is not liable for any loss arising from use of this site or its material.</li>
+  </ul>
+</section>
+<p class="meta">See also the <a href="../privacy/index.html">privacy notice</a>.</p>"""
+    write("terms/index.html", shell("Terms — RIPER e-Library",
+          "Terms of use for the RIPER e-Library.", "../", body))
+
+
 def main():
     build_assets()
     build_home()
@@ -780,6 +843,8 @@ def main():
     build_about()
     build_contact()
     build_staff()
+    build_privacy()
+    build_terms()
     build_404()
     # remove pages that no longer exist in this information architecture
     for stale in ("search", "contribute"):
