@@ -1,0 +1,20 @@
+# Default reviewers for anything not matched below.
+*                       @kartik-h6
+
+# Static site generator + catalogue: Catalogue & Build QA, plus the Architect.
+/build/                 @arjungupta001 @mahidrafiq
+/data/                  @arjungupta001 @mahidrafiq
+
+# Front-end assets: UI & Accessibility QA, plus the Architect.
+/assets/                @Lakshsharma777 @mahidrafiq
+
+# Admin service (auth, roles, publish): Architect + Security/Release Validator.
+/admin/                 @mahidrafiq
+/admin/app/security.py  @mahidrafiq
+
+# Repository plumbing and process docs: the Orchestrator.
+/.github/               @kartik-h6
+/docs/                  @kartik-h6
+
+# NOTE: reviewers must have write access before CODEOWNERS requests will fire.
+# Role 6 (Security Reviewer / Release Validator) should be added here once named.

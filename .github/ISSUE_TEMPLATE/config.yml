@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security issue (private)
+    url: https://github.com/kartik-h6/e-library/blob/main/SECURITY.md
+    about: Never report security issues in a public issue. See SECURITY.md for how to report privately.
