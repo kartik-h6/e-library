@@ -2,7 +2,7 @@
 .header-inner{max-width:var(--maxw);margin:0 auto;padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .brand{display:flex;align-items:center;gap:.65rem;color:#fff}
 .brand:hover{text-decoration:none}
-.brand .brand-mark{width:38px;height:38px;flex:0 0 auto}
+.brand .brand-mark{width:42px;height:42px;flex:0 0 auto}
 .brand b{font-size:1.12rem;display:block;line-height:1.1}
 .brand span{font-size:.74rem;color:#a7f3d0;letter-spacing:.02em}
 .nav-toggle{display:inline-flex;flex-direction:column;gap:5px;background:none;border:0;padding:.5rem;cursor:pointer}

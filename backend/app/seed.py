@@ -26,7 +26,7 @@ DEPARTMENTS = [
     ("PCO", "Pharmacology"),
     ("PGR", "Pharmacognosy"),
     ("PPR", "Pharmacy Practice"),
-    ("GEN", "General"),
+    ("GEN", "Common Courses"),
 ]
 
 # One master account per department. Change before any real use.
@@ -38,19 +38,41 @@ def slugify(text: str) -> str:
 
 
 def department_code_for(title: str) -> str:
-    """Map a subject title to a department. The NEP syllabus is distributed on this basis."""
+    """Map a subject title to a department, following the NEP 2020 distribution.
+
+    `GEN` is the shared pool: internships, research projects, generic electives and
+    college-wide courses that don't belong to a single department. It is visible to every
+    department master as well as the super admin, so nothing is orphaned.
+    """
     t = title.lower()
+    # shared / college-wide
+    if "choose one" in t or "internship" in t or "research project" in t:
+        return "GEN"
+    if any(k in t for k in ("environmental science", "universal human values")):
+        return "GEN"
+    # pharmacognosy
     if any(k in t for k in ("pharmacognosy", "herbal", "natural product", "phytochem")):
         return "PGR"
-    if any(k in t for k in ("pharmacology", "pathophysi", "pharmacotherap", "pharmacovigilance")):
+    # pharmacology
+    if any(k in t for k in ("pharmacology", "pathophysi", "pharmacotherap",
+                            "pharmacovigilance", "human anatomy")):
         return "PCO"
-    if any(k in t for k in ("chemistry", "medicinal", "inorganic", "organic", "analysis", "analytical")):
+    # pharmaceutical chemistry
+    if any(k in t for k in ("chemistry", "medicinal", "inorganic", "organic", "analysis",
+                            "analytical", "biochemistry")):
         return "PCH"
-    if any(k in t for k in ("pharmacy practice", "social", "jurisprudence", "regulatory",
-                            "management", "startup", "marketing")):
+    # pharmacy practice
+    if any(k in t for k in ("pharmacy practice", "social pharmacy", "public health",
+                            "jurisprudence", "regulatory", "management", "startup",
+                            "marketing", "intellectual property", "biostatistics",
+                            "research methodology", "psychology", "ai in clinical",
+                            "translational")):
         return "PPR"
+    # pharmaceutics
     if any(k in t for k in ("pharmaceutics", "dosage", "engineering", "biopharmaceutics",
-                            "biotechnology", "quality", "physical pharm")):
+                            "biotechnology", "quality", "physical pharm", "general pharmacy",
+                            "microbiology", "cosmetic", "industrial pharmacy", "sterile",
+                            "machine learning", "python", "ai application")):
         return "PCE"
     return "GEN"
 

@@ -4,7 +4,8 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 a{color:var(--primary);text-decoration:none}a:hover{text-decoration:underline}
 .topbar{display:flex;align-items:center;gap:1.2rem;background:#0f172a;color:#fff;padding:.7rem 1.1rem;flex-wrap:wrap}
-.topbar .brand{color:#fff;font-weight:700}.topbar .brand span{color:#5eead4;font-weight:500;font-size:.8rem;margin-left:.3rem}
+.topbar .brand{color:#fff;font-weight:700}
+.topbar .brand img{vertical-align:-7px;margin-right:.45rem}.topbar .brand span{color:#5eead4;font-weight:500;font-size:.8rem;margin-left:.3rem}
 .topbar nav{display:flex;gap:.9rem;flex-wrap:wrap}
 .topbar nav a{color:#cbd5e1}.topbar nav a:hover{color:#fff}
 .topbar .who{margin-left:auto;display:flex;align-items:center;gap:.6rem;font-size:.86rem}

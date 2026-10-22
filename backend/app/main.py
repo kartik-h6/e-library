@@ -74,9 +74,17 @@ def log(db, entity, entity_id, action, actor_id, payload=""):
 
 
 def scoped_subjects(db, user):
+    """Subjects a user may act on.
+
+    A super admin sees everything. A department master sees their own department's subjects
+    plus the shared pool (`GEN` — internships, projects, generic electives, college-wide
+    courses), so nothing is orphaned. They never see another department's subjects.
+    """
     q = db.query(Subject).filter(Subject.archived.is_(False))
     if user.role != "super_admin":
-        q = q.filter(Subject.department_id == user.department_id)
+        common = db.query(Department).filter(Department.code == "GEN").first()
+        ids = [user.department_id] + ([common.id] if common else [])
+        q = q.filter(Subject.department_id.in_(ids))
     return q.order_by(Subject.code).all()
 
 

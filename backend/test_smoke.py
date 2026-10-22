@@ -101,6 +101,17 @@ with TestClient(app) as c:
     db.expire_all(); db.refresh(res)
     check("SME publish attempt ignored", res.status == "published")  # already published; ensure no crash
 
+    print("Department scoping (Chemistry master)")
+    c4 = TestClient(app)
+    c4.post("/login", data={"email": "master.pch@dept.riper.test", "password": "dept123"})
+    body = c4.get("/subjects").text
+    check("chemistry master sees chemistry subjects",
+          "Medicinal Chemistry" in body or "Pharmaceutical Organic Chemistry" in body)
+    check("chemistry master does NOT see pharmacology subjects", "Systemic Pharmacology" not in body)
+    check("chemistry master does NOT see pharmaceutics subjects",
+          "Pharmaceutical Dosage Forms" not in body)
+    check("chemistry master sees the shared pool", "Common Courses" in body)
+
     print("Source upload")
     csrf_admin = csrf_of(c.get("/dashboard").text)
     files = {"file": ("demo-notes.txt", b"hello notes", "text/plain")}
