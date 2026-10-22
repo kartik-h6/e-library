@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ subject.code }} — RIPER e-Library Admin{% endblock %}
+{% block body %}
+<p class="crumbs"><a href="/subjects">Subjects</a> / {{ subject.code }}</p>
+<h1>{{ subject.title }}</h1>
+<p class="muted">
+  <span class="mono">{{ subject.code }}</span> &middot; {{ subject.semester.label }}
+  &middot; {{ subject.type }} &middot; {{ subject.credits }} cr
+  &middot; {{ subject.department.name if subject.department else '—' }}
+  {% if not in_scope %}<span class="warn">outside your scope — read only</span>{% endif %}
+</p>
+
+<h2>Units</h2>
+<ul class="units">
+  {% for u in units %}
+  <li>
+    <span class="u-no">Unit {{ u.seq }}</span>
+    <span>{{ u.title }}</span>
+    {% if in_scope and can_edit %}
+    <form method="post" action="/units/{{ u.id }}/delete" class="inline">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <button class="link danger">remove</button>
+    </form>
+    {% endif %}
+  </li>
+  {% else %}<li class="muted">No units yet.</li>{% endfor %}
+</ul>
+{% if in_scope and can_edit %}
+<form method="post" action="/subjects/{{ subject.id }}/units" class="inline-form">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <input name="title" placeholder="Add a unit title" required>
+  <button class="btn small">Add unit</button>
+</form>
+{% endif %}
+
+<h2>Resources</h2>
+<table class="tbl">
+  <thead><tr><th>Title</th><th>Type</th><th>Status</th><th>Link</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for r in resources %}
+    <tr>
+      <td>{{ r.title }}</td>
+      <td>{{ r.type }}</td>
+      <td><span class="chip st-{{ r.status }}">{{ r.status }}</span></td>
+      <td>{% if r.url %}<a href="{{ r.url }}" target="_blank" rel="noopener">open</a>{% else %}<span class="muted">—</span>{% endif %}</td>
+      <td class="actions">
+        {% if in_scope %}
+          {% if r.status == 'draft' and can_edit %}
+            <form method="post" action="/resources/{{ r.id }}/status" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="submit"><button class="btn tiny">Submit</button></form>
+          {% endif %}
+          {% if r.status == 'needs-review' and can_approve %}
+            <form method="post" action="/resources/{{ r.id }}/status" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="approve"><button class="btn tiny">Approve</button></form>
+          {% endif %}
+          {% if r.status == 'verified' and can_publish %}
+            <form method="post" action="/resources/{{ r.id }}/status" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="publish"><button class="btn tiny">Publish</button></form>
+          {% endif %}
+          {% if r.status == 'published' and can_approve %}
+            <form method="post" action="/resources/{{ r.id }}/status" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="archive"><button class="btn tiny ghost">Archive</button></form>
+          {% endif %}
+          {% if can_edit %}
+            <form method="post" action="/resources/{{ r.id }}/delete" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="link danger">delete</button></form>
+          {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="muted">No resources yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% if in_scope and can_edit %}
+<details class="panel">
+  <summary>Add a resource</summary>
+  <form method="post" action="/subjects/{{ subject.id }}/resources" class="grid-form">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <label>Type
+      <select name="type">
+        <option value="notes">notes</option><option value="paper">paper</option>
+        <option value="manual">manual</option><option value="book">book</option>
+        <option value="other">other</option>
+      </select>
+    </label>
+    <label>Title <input name="title" placeholder="Unit 1 — full notes" required></label>
+    <label>Language <input name="language" value="English"></label>
+    <label>Source <input name="source" placeholder="Author / site"></label>
+    <label>URL <input name="url" placeholder="https://drive.google.com/..."></label>
+    <label>Rights / licence <input name="rights" placeholder="Own notes / CC-BY"></label>
+    <label>Unit (optional)
+      <select name="unit_id">
+        <option value="">— none —</option>
+        {% for u in units %}<option value="{{ u.id }}">Unit {{ u.seq }} — {{ u.title }}</option>{% endfor %}
+      </select>
+    </label>
+    <button class="btn">Add resource (as draft)</button>
+  </form>
+</details>
+{% endif %}
+{% endblock %}

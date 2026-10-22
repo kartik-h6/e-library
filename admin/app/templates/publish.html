@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Publish — RIPER e-Library Admin{% endblock %}
+{% block body %}
+<h1>Publish</h1>
+<p class="muted">
+  Exports every <b>published</b> resource into the static site's catalogue file, then the site is regenerated.
+</p>
+{% if published is defined %}
+<div class="notice ok">Published {{ published }} resource(s) to <span class="mono">{{ path }}</span>.</div>
+{% endif %}
+<p class="mono small">{{ path }}</p>
+{% if can_publish %}
+<form method="post" action="/publish">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <button class="btn">Publish catalogue</button>
+</form>
+{% else %}
+<div class="notice warn">Your role cannot publish. Ask an HOD or the Super Admin.</div>
+{% endif %}
+{% endblock %}

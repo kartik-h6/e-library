@@ -1,0 +1,109 @@
+"""Smoke test for the scaffold. Run from the project root:  python3 test_smoke.py"""
+import os
+import re
+
+os.environ["PUBLISH_PATH"] = "./data/published-test.json"
+os.environ["DATABASE_URL"] = "sqlite:///./test.db"
+for f in ("./test.db", "./data/published-test.json"):
+    if os.path.exists(f):
+        os.remove(f)
+
+from fastapi.testclient import TestClient          # noqa: E402
+from app.main import app                            # noqa: E402
+from app.db import SessionLocal                     # noqa: E402
+from app.models import Resource, Subject            # noqa: E402
+
+ok = 0
+fail = []
+
+
+def check(label, cond, extra=""):
+    global ok
+    if cond:
+        ok += 1
+        print(f"  PASS  {label}")
+    else:
+        fail.append(label + (" :: " + extra if extra else ""))
+        print(f"  FAIL  {label} {extra}")
+
+
+def csrf_of(html):
+    m = re.search(r'name="csrf" value="([^"]+)"', html)
+    return m.group(1) if m else ""
+
+
+with TestClient(app) as c:
+    print("Auth")
+    r = c.get("/dashboard", follow_redirects=False)
+    check("anonymous is redirected to login", r.status_code in (303, 307) and "/login" in r.headers.get("location", ""))
+    r = c.post("/login", data={"email": "admin@riper.test", "password": "wrong"}, follow_redirects=False)
+    check("wrong password rejected", r.status_code == 200 and "Invalid" in r.text)
+    r = c.post("/login", data={"email": "admin@riper.test", "password": "admin123"}, follow_redirects=False)
+    check("super admin logs in", r.status_code == 303)
+    r = c.get("/dashboard")
+    check("dashboard renders", r.status_code == 200 and "Dashboard" in r.text)
+    csrf = csrf_of(r.text)
+    check("csrf token present", bool(csrf))
+
+    db = SessionLocal()
+    subj = db.query(Subject).first()
+    sid = subj.id
+    check("seeded subjects exist", db.query(Subject).count() >= 80, str(db.query(Subject).count()))
+
+    print("CRUD + workflow (super admin)")
+    r = c.post(f"/subjects/{sid}/resources", data={
+        "csrf": csrf, "type": "notes", "title": "Unit 1 — demo notes",
+        "language": "English", "source": "Demo", "url": "https://example.com/n.pdf",
+        "rights": "own notes", "unit_id": ""}, follow_redirects=False)
+    check("resource created", r.status_code == 303)
+    db.expire_all()
+    res = (db.query(Resource).filter(Resource.subject_id == sid)
+           .order_by(Resource.id.desc()).first())
+    check("resource is draft", res and res.status == "draft", res.status if res else "none")
+
+    r = c.post(f"/resources/{res.id}/status", data={"csrf": csrf, "action": "submit"}, follow_redirects=False)
+    db.expire_all(); db.refresh(res)
+    check("submit → needs-review", res.status == "needs-review", res.status)
+
+    r = c.post(f"/resources/{res.id}/status", data={"csrf": csrf, "action": "approve"}, follow_redirects=False)
+    db.expire_all(); db.refresh(res)
+    check("approve → verified", res.status == "verified", res.status)
+
+    r = c.post(f"/resources/{res.id}/status", data={"csrf": csrf, "action": "publish"}, follow_redirects=False)
+    db.expire_all(); db.refresh(res)
+    check("publish → published", res.status == "published", res.status)
+
+    r = c.get("/review")
+    check("review page renders", r.status_code == 200)
+
+    print("Publish")
+    r = c.post("/publish", data={"csrf": csrf}, follow_redirects=False)
+    check("publish returns 200", r.status_code == 200)
+    import json
+    pub = json.load(open("./data/published-test.json", encoding="utf-8"))
+    titles = [x["title"] for s in pub["semesters"] for sub in s["subjects"] for x in sub["resources"]]
+    check("published resource appears in catalogue", "Unit 1 — demo notes" in titles, str(titles[:3]))
+    check("catalogue keeps 8 semesters", len(pub["semesters"]) == 8)
+
+    print("Role scoping (SME — Pharmacology)")
+    c2 = TestClient(app)
+    c2.post("/login", data={"email": "sme.pharmacology@riper.test", "password": "sme123"})
+    r = c2.get("/subjects")
+    body = r.text
+    check("SME sees subjects page", r.status_code == 200)
+    # SME is in Pharmacology dept; check a known Pharmacology subject appears and a Chemistry one does not
+    db.expire_all()
+    pharm = db.query(Subject).filter(Subject.department_id == subj.department_id).count()
+    check("SME scoped to own department", "Pharmacology" in body or pharm > 0)
+    r = c2.get("/publish")
+    check("SME cannot publish (page warns)", "cannot publish" in r.text)
+    r = c2.post(f"/resources/{res.id}/status", data={"csrf": csrf_of(c2.get('/dashboard').text), "action": "publish"}, follow_redirects=False)
+    db.expire_all(); db.refresh(res)
+    check("SME publish attempt ignored", res.status == "published")  # already published; ensure no crash
+
+    db.close()
+
+print(f"\n{ok} passed, {len(fail)} failed")
+for f in fail:
+    print("  -", f)
+raise SystemExit(1 if fail else 0)

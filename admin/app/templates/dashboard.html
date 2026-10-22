@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — RIPER e-Library Admin{% endblock %}
+{% block body %}
+<h1>Dashboard</h1>
+<p class="muted">
+  {% if user.role == 'super_admin' %}All departments{% else %}Your department: {{ user.department.name if user.department else '—' }}{% endif %}
+  &middot; {{ subjects|length }} subjects in scope
+</p>
+
+<div class="stats">
+  <div class="stat"><b>{{ total_resources }}</b><span>resources</span></div>
+  <div class="stat"><b>{{ counts['draft'] }}</b><span>draft</span></div>
+  <div class="stat"><b>{{ counts['needs-review'] }}</b><span>needs review</span></div>
+  <div class="stat"><b>{{ counts['verified'] }}</b><span>verified</span></div>
+  <div class="stat ok"><b>{{ counts['published'] }}</b><span>published</span></div>
+</div>
+
+<h2>Subjects in scope</h2>
+<table class="tbl">
+  <thead><tr><th>Code</th><th>Title</th><th>Semester</th><th>Department</th><th>Units</th><th>Resources</th></tr></thead>
+  <tbody>
+  {% for s in subjects %}
+    <tr>
+      <td class="mono">{{ s.code }}</td>
+      <td><a href="/subjects/{{ s.id }}">{{ s.title }}</a></td>
+      <td>{{ s.semester.label }}</td>
+      <td>{{ s.department.name if s.department else '—' }}</td>
+      <td>{{ s.units|length }}</td>
+      <td>{{ s.resources|selectattr('archived','equalto',false)|list|length }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="muted">No subjects in scope.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,7 @@
+# Python (admin app)
+__pycache__/
+*.pyc
+.venv/
+.env
+*.db
+admin/data/

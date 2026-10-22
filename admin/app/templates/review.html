@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Review — RIPER e-Library Admin{% endblock %}
+{% block body %}
+<h1>Review queue</h1>
+<p class="muted">Items awaiting approval or publishing, scoped to you.</p>
+<table class="tbl">
+  <thead><tr><th>Subject</th><th>Title</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for r in queue %}
+    <tr>
+      <td class="mono">{{ r.subject.code }}</td>
+      <td>{{ r.title }}</td>
+      <td>{{ r.type }}</td>
+      <td><span class="chip st-{{ r.status }}">{{ r.status }}</span></td>
+      <td class="actions">
+        {% if r.status == 'needs-review' and can_approve %}
+          <form method="post" action="/resources/{{ r.id }}/status" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="approve"><button class="btn tiny">Approve</button></form>
+        {% endif %}
+        {% if r.status == 'verified' and can_publish %}
+          <form method="post" action="/resources/{{ r.id }}/status" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="publish"><button class="btn tiny">Publish</button></form>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="muted">Nothing in the queue.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

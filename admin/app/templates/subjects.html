@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Subjects — RIPER e-Library Admin{% endblock %}
+{% block body %}
+<h1>Subjects</h1>
+<p class="muted">{{ subjects|length }} subjects in scope.</p>
+
+{% if can_manage %}
+<details class="panel">
+  <summary>Add a subject</summary>
+  <form method="post" action="/subjects" class="grid-form">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <label>Code <input name="code" placeholder="BP102T" required></label>
+    <label>Title <input name="title" placeholder="General Pharmacy" required></label>
+    <label>Semester
+      <select name="semester_id">
+        {% for sem in semesters %}<option value="{{ sem.id }}">{{ sem.label }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Credits <input name="credits" type="number" value="3" min="0"></label>
+    <label>Type
+      <select name="type">
+        <option value="theory">theory</option>
+        <option value="practical">practical</option>
+        <option value="aec">aec</option><option value="sec">sec</option>
+        <option value="vac">vac</option><option value="internship">internship</option>
+        <option value="project">project</option>
+      </select>
+    </label>
+    <button class="btn">Create</button>
+  </form>
+</details>
+{% endif %}
+
+<table class="tbl">
+  <thead><tr><th>Code</th><th>Title</th><th>Semester</th><th>Department</th><th></th></tr></thead>
+  <tbody>
+  {% for s in subjects %}
+    <tr>
+      <td class="mono">{{ s.code }}</td>
+      <td>{{ s.title }}</td>
+      <td>{{ s.semester.label }}</td>
+      <td>{{ s.department.name if s.department else '—' }}</td>
+      <td><a href="/subjects/{{ s.id }}">Open</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="muted">No subjects in scope.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

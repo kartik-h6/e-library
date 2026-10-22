@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}RIPER e-Library Admin{% endblock %}</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+{% if user %}
+<header class="topbar">
+  <a class="brand" href="/dashboard">RIPER e-Library <span>Admin</span></a>
+  <nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/review">Review</a>
+    <a href="/publish">Publish</a>
+  </nav>
+  <div class="who">
+    <span class="name">{{ user.name }}</span>
+    <span class="role role-{{ user.role }}">{{ user.role }}</span>
+    <form method="post" action="/logout" class="inline">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <button class="link">Log out</button>
+    </form>
+  </div>
+</header>
+{% endif %}
+<main class="wrap">
+{% block body %}{% endblock %}
+</main>
+</body>
+</html>
