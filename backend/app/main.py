@@ -27,6 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET = os.environ.get("SESSION_SECRET", "dev-secret-change-me")
 # Where material is stored. Shown to staff as a link; empty hides it.
 DRIVE_FOLDER = os.environ.get("DRIVE_FOLDER_URL", "")
+# The public library site, linked from the staff header.
+PUBLIC_SITE = os.environ.get("PUBLIC_SITE_URL", "https://kartik-h6.github.io/e-library/")
 
 ACTION_STATUS = {"submit": "needs-review", "approve": "verified",
                  "publish": "published", "archive": "archived", "reopen": "draft"}
@@ -53,7 +55,7 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
 def page(request: Request, db, name: str, **extra):
     user = security.current_user(request, db)
     ctx = {"request": request, "user": user, "csrf": security.csrf_token(request),
-           "drive_folder": DRIVE_FOLDER}
+           "drive_folder": DRIVE_FOLDER, "public_site": PUBLIC_SITE}
     ctx.update(extra)
     return templates.TemplateResponse(request, name, ctx)
 
@@ -272,7 +274,7 @@ def delete_resource(rid: int, request: Request, db=Depends(get_db), csrf: str = 
     return RedirectResponse("/subjects", status_code=303)
 
 
-# ---------------------------------------------------------------- upload & student library
+# ---------------------------------------------------------------- upload & published preview
 
 @app.post("/subjects/{sid}/upload")
 async def upload_source(sid: int, request: Request, db=Depends(get_db),
@@ -299,7 +301,7 @@ async def upload_source(sid: int, request: Request, db=Depends(get_db),
 
 @app.get("/library", response_class=HTMLResponse)
 def library(request: Request, db=Depends(get_db)):
-    """Read-only view of published material — what the shared student login sees."""
+    """Read-only view of published material — exactly what the public site shows."""
     user, redir = gate(request, db)
     if redir:
         return redir

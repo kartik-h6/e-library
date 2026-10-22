@@ -21,12 +21,23 @@ index.html              home (landing)
 semesters/index.html    browse + search
 semester-N/index.html   semester page
 semester-N/<subject>/   subject page (units + material sections)
-about/  contact/  404.html
+about/  contact/  staff/  404.html
 assets/css  assets/js  assets/logo
 data/catalogue.json     single source of truth for the structure
 data/schema.json        JSON Schema for the catalogue
 build/generate.py       the generator
 resources/              rights-cleared files only
+```
+
+## Access
+
+- **Students** read the site anonymously — no account, no sign-in.
+- **Staff** reach their portal from the **Staff** link in the nav. That link points to
+  `SIGN_IN_URL` when set (the hosted staff service); otherwise it opens `staff/index.html`, which
+  explains the two paths. Set `SIGN_IN_URL` before launch:
+
+```bash
+SIGN_IN_URL=https://<staff-service>/login python3 build/generate.py
 ```
 
 ## Deployment

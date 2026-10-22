@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RIPER e-Library catalogue",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "curriculum",
+    "semesters"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "curriculum": {
+      "type": "object",
+      "required": [
+        "programme",
+        "authority",
+        "sourceUrl",
+        "checkedAt",
+        "status"
+      ],
+      "properties": {
+        "programme": {
+          "type": "string"
+        },
+        "institution": {
+          "type": "string"
+        },
+        "awardingUniversity": {
+          "type": "string"
+        },
+        "documentTitle": {
+          "type": "string"
+        },
+        "documentVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authority": {
+          "type": "string"
+        },
+        "sourceUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "checkedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "needs-review",
+            "verified",
+            "published",
+            "archived",
+            "provisional"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "semesters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "number",
+          "label",
+          "subjects"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "number": {
+            "type": "integer"
+          },
+          "label": {
+            "type": "string"
+          },
+          "credits": {
+            "type": "integer"
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "code",
+                "slug",
+                "title",
+                "type"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "credits": {
+                  "type": "integer"
+                },
+                "type": {
+                  "enum": [
+                    "theory",
+                    "practical",
+                    "aec",
+                    "sec",
+                    "vac",
+                    "internship",
+                    "project"
+                  ]
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "units": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "resources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "title",
+                      "type",
+                      "url"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "notes",
+                          "paper",
+                          "manual",
+                          "book",
+                          "other"
+                        ]
+                      },
+                      "language": {
+                        "type": "string"
+                      },
+                      "source": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "rights": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "enum": [
+                          "draft",
+                          "needs-review",
+                          "verified",
+                          "published",
+                          "archived"
+                        ]
+                      },
+                      "reviewer": {
+                        "type": "string"
+                      },
+                      "lastChecked": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -343,9 +343,12 @@ def shell(title, desc, root, body, active="", extra_scripts="", data_root=None):
     links = "".join(
         '<li><a href="%s%s"%s>%s</a></li>' % (root, h, ' aria-current="page"' if k == active else '', n)
         for h, n, k in nav)
-    if SIGN_IN_URL:
-        links += f'<li><a class="nav-signin" href="{SIGN_IN_URL}">Sign in</a></li>'
+    # Staff access: straight to the portal when configured, otherwise an explainer page.
+    staff_href = SIGN_IN_URL if SIGN_IN_URL else root + "staff/index.html"
+    links += '<li><a class="nav-staff" href="%s"%s>Staff</a></li>' % (
+        staff_href, ' aria-current="page"' if active == "staff" else '')
     footer_links = " · ".join('<a href="%s%s">%s</a>' % (root, h, n) for h, n, k in nav)
+    footer_links += ' · <a href="%s">Staff</a>' % staff_href
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -679,12 +682,37 @@ def build_assets():
 
 
 
+def build_staff():
+    if SIGN_IN_URL:
+        cta = f'<a class="btn" href="{SIGN_IN_URL}">Staff sign in</a>'
+    else:
+        cta = ('<div class="notice">The staff portal link has not been set yet. The maintainer '
+               'adds it (the <span class="mono">SIGN_IN_URL</span> setting) once the staff service '
+               'is hosted.</div>')
+    body = f"""{breadcrumbs('../', [("Home","index.html"),("Staff",None)])}
+<h1>Access</h1>
+<p class="lead">Two audiences, two clear paths.</p>
+<section class="section">
+  <h2>Students</h2>
+  <p>No account, no sign-in. The library is open —
+     <a href="../semesters/index.html">browse by semester</a>.</p>
+</section>
+<section class="section">
+  <h2>Staff</h2>
+  <p>Department staff sign in to add and manage their subjects' material.</p>
+  {cta}
+</section>"""
+    write("staff/index.html", shell("Staff access — RIPER e-Library",
+          "How students and staff access the RIPER e-Library.", "../", body, active="staff"))
+
+
 def main():
     build_assets()
     build_home()
     build_semesters()
     build_about()
     build_contact()
+    build_staff()
     build_404()
     # remove pages that no longer exist in this information architecture
     for stale in ("search", "contribute"):
