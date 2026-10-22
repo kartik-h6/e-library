@@ -18,6 +18,8 @@ KINDS = [("notes", "Notes & PDFs", ""),
           "None yet — the 2026 (NEP 2020) batch is the first cohort, so no papers have been set."),
          ("manual", "Lab manuals", ""), ("book", "Reference books", "")]
 ISSUES_URL = "https://github.com/kartik-h6/e-library/issues/new"
+# Optional: the hosted backend's sign-in URL. Empty hides the "Sign in" link in the nav.
+SIGN_IN_URL = os.environ.get("SIGN_IN_URL", "")
 
 
 def issue_url(s, sm, kind_label):
@@ -341,6 +343,8 @@ def shell(title, desc, root, body, active="", extra_scripts="", data_root=None):
     links = "".join(
         '<li><a href="%s%s"%s>%s</a></li>' % (root, h, ' aria-current="page"' if k == active else '', n)
         for h, n, k in nav)
+    if SIGN_IN_URL:
+        links += f'<li><a class="nav-signin" href="{SIGN_IN_URL}">Sign in</a></li>'
     footer_links = " · ".join('<a href="%s%s">%s</a>' % (root, h, n) for h, n, k in nav)
     return f"""<!DOCTYPE html>
 <html lang="en">

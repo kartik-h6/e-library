@@ -28,6 +28,14 @@ uvicorn app.main:app --reload      # http://127.0.0.1:8000
 The database is created and seeded on first start from `../frontend/data/catalogue.json` — the
 real 8-semester, 88-subject catalogue — distributed by department.
 
+## Sign in
+
+One neutral login page at `/login` — it does not presume a role. Enter a student ID or an email:
+
+- **Students** land in the read-only **library** (`/library`) — they are viewers.
+- **Department masters, SMEs and the Super Admin** land in the **dashboard** — they are the
+  contributors who create, edit, upload and publish the library's material.
+
 ## Accounts
 
 | Role | Login | Password | Scope |

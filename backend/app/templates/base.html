@@ -9,7 +9,7 @@
 <body>
 {% if user %}
 <header class="topbar">
-  <a class="brand" href="/dashboard">RIPER e-Library <span>Admin</span></a>
+  <a class="brand" href="{{ '/library' if user.role == 'student' else '/dashboard' }}">RIPER e-Library <span>{{ 'Student' if user.role == 'student' else 'Staff' }}</span></a>
   <nav>
     {% if user.role == 'student' %}
       <a href="/library">Library</a>

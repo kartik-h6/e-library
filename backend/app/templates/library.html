@@ -2,22 +2,55 @@
 {% block title %}Library — RIPER e-Library{% endblock %}
 {% block body %}
 <h1>Library</h1>
-<p class="muted">Published study material — read only.</p>
+<p class="muted">{{ total }} published item(s) across {{ groups|length }} subject(s). Read only.</p>
 
-<table class="tbl">
-  <thead><tr><th>Subject</th><th>Title</th><th>Type</th><th>Language</th><th></th></tr></thead>
-  <tbody>
-  {% for r in rows %}
-    <tr>
-      <td class="mono">{{ subjects[r.subject_id].code if subjects.get(r.subject_id) else '—' }}</td>
-      <td>{{ r.title }}</td>
-      <td>{{ r.type }}</td>
-      <td>{{ r.language }}</td>
-      <td>{% if r.url %}<a href="{{ r.url }}" target="_blank" rel="noopener">open</a>{% else %}<span class="muted">—</span>{% endif %}</td>
-    </tr>
-  {% else %}
-    <tr><td colspan="5" class="muted">Nothing published yet. Material appears here once a department publishes it.</td></tr>
-  {% endfor %}
-  </tbody>
-</table>
+{% if groups %}
+<div class="search-box">
+  <label class="visually-hidden" for="libq">Filter the library</label>
+  <input id="libq" type="search" placeholder="Filter by subject, title or type…" autocomplete="off">
+</div>
+{% endif %}
+
+{% for sid, rows in groups.items() %}
+  {% set s = subjects.get(sid) %}
+  <section class="section" data-group>
+    <h2>{% if s %}<span class="mono">{{ s.code }}</span> {{ s.title }}{% else %}Subject{% endif %}</h2>
+    <table class="tbl">
+      <thead><tr><th>Title</th><th>Type</th><th>Language</th><th></th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+        <tr data-row>
+          <td>{{ r.title }}</td>
+          <td>{{ r.type }}</td>
+          <td>{{ r.language }}</td>
+          <td>{% if r.url %}<a href="{{ r.url }}" target="_blank" rel="noopener">open</a>{% else %}<span class="muted">—</span>{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% else %}
+  <div class="empty">
+    <p>Nothing published yet.</p>
+    <p class="muted small">Material appears here once a department publishes it.</p>
+  </div>
+{% endfor %}
+
+<script>
+  var q = document.getElementById('libq');
+  if (q) {
+    q.addEventListener('input', function () {
+      var t = q.value.trim().toLowerCase();
+      document.querySelectorAll('[data-group]').forEach(function (sec) {
+        var shown = 0;
+        sec.querySelectorAll('[data-row]').forEach(function (tr) {
+          var hit = tr.textContent.toLowerCase().indexOf(t) >= 0;
+          tr.style.display = hit ? '' : 'none';
+          if (hit) shown++;
+        });
+        sec.style.display = (shown || !t) ? '' : 'none';
+      });
+    });
+  }
+</script>
 {% endblock %}

@@ -313,8 +313,11 @@ def library(request: Request, db=Depends(get_db)):
     rows = (db.query(Resource)
             .filter(Resource.status == "published", Resource.archived.is_(False))
             .order_by(Resource.subject_id, Resource.id.desc()).all())
+    groups = {}
+    for r in rows:
+        groups.setdefault(r.subject_id, []).append(r)
     subjects = {s.id: s for s in db.query(Subject).all()}
-    return page(request, db, "library.html", rows=rows, subjects=subjects)
+    return page(request, db, "library.html", groups=groups, subjects=subjects, total=len(rows))
 
 
 # ---------------------------------------------------------------- review & publish

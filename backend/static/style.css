@@ -58,3 +58,8 @@ input,select{padding:.45rem .55rem;border:1px solid var(--line);border-radius:8p
 .demo{margin-top:1.2rem;border-top:1px solid var(--line);padding-top:.9rem}
 .demo ul{margin:.4rem 0 0;padding-left:1.1rem;font-size:.84rem;color:var(--muted)}
 .demo li{margin-bottom:.2rem}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.search-box{display:flex;gap:.5rem;margin:1rem 0}
+.search-box input{flex:1;max-width:420px;padding:.55rem .7rem;border:1px solid var(--line);border-radius:8px;font:inherit}
+.section{margin:1.6rem 0}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);padding:1.4rem;text-align:center;color:var(--muted)}
