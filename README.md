@@ -59,6 +59,7 @@ python3 security/check.py
 
 ## Documentation
 
+- `docs/TECH_STACK.md` — stack options (all free/open-source) and the recommendation
 - `docs/DEPLOYMENT.md` — deployment runbook, budget and maintenance
 - `docs/PRIVACY_AND_TERMS.md` — privacy notice, terms of use and safety guardrails
 - `docs/DASHBOARD_DESIGN.md` — the backend's design
