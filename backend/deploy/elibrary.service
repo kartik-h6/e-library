@@ -1,0 +1,24 @@
+[Unit]
+Description=RIPER e-Library staff service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=elibrary
+Group=elibrary
+WorkingDirectory=/opt/elibrary/backend
+EnvironmentFile=/etc/elibrary/elibrary.env
+ExecStart=/opt/elibrary/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=3
+
+# Hardening: the service runs as an unprivileged user and can write only where it must.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/elibrary /opt/elibrary/backend/uploads
+
+[Install]
+WantedBy=multi-user.target
