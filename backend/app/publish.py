@@ -29,8 +29,10 @@ def build_catalogue(db) -> dict:
                     .order_by(Subject.code).all())
         subj_out = []
         for sub in subjects:
-            units = [u.title for u in db.query(Unit)
-                     .filter(Unit.subject_id == sub.id).order_by(Unit.seq).all()]
+            unit_rows = (db.query(Unit).filter(Unit.subject_id == sub.id)
+                         .order_by(Unit.seq).all())
+            units = [u.title for u in unit_rows]
+            unit_of = {u.id: u for u in unit_rows}
             resources = (db.query(Resource)
                          .filter(Resource.subject_id == sub.id,
                                  Resource.status == "published",
@@ -47,6 +49,9 @@ def build_catalogue(db) -> dict:
                     "title": r.title, "type": r.type, "language": r.language,
                     "source": r.source, "url": r.url, "rights": r.rights,
                     "status": r.status, "lastChecked": r.last_checked,
+                    # which unit this belongs to, so the site can file it under that unit
+                    "unitSeq": unit_of[r.unit_id].seq if r.unit_id in unit_of else None,
+                    "unit": unit_of[r.unit_id].title if r.unit_id in unit_of else "",
                 } for r in resources],
             })
         out["semesters"].append({
