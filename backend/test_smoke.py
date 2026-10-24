@@ -85,6 +85,29 @@ with TestClient(app) as c:
     check("published resource appears in catalogue", "Unit 1 — demo notes" in titles, str(titles[:3]))
     check("catalogue keeps 8 semesters", len(pub["semesters"]) == 8)
 
+    print("Unit-linked material")
+    from app.models import Unit as _Unit
+    unit = db.query(_Unit).filter(_Unit.subject_id == sid).order_by(_Unit.seq).first()
+    c.post(f"/subjects/{sid}/resources", data={
+        "csrf": csrf, "type": "notes", "title": "Linked unit notes",
+        "url": "https://example.com/unit1.pdf", "unit_id": str(unit.id)},
+        follow_redirects=False)
+    res2 = db.query(Resource).filter(Resource.title == "Linked unit notes").first()
+    db.refresh(res2)
+    c.post(f"/resources/{res2.id}/status", data={"csrf": csrf, "action": "publish"},
+           follow_redirects=False)
+    c.post("/publish", data={"csrf": csrf}, follow_redirects=False)
+    pub = json.load(open("./data/published-test.json", encoding="utf-8"))
+    linked = [x for s in pub["semesters"] for sub in s["subjects"] for x in sub["resources"]
+              if x["title"] == "Linked unit notes"]
+    check("published resource carries its unit number",
+          bool(linked) and linked[0]["unitSeq"] == unit.seq, str(linked[:1]))
+    api = TestClient(app).get("/api/public/library").json()
+    api_linked = [x for v in api.get("subjects", {}).values() for x in v
+                  if x["title"] == "Linked unit notes"]
+    check("public API carries the unit number",
+          bool(api_linked) and api_linked[0]["unitSeq"] == unit.seq, str(api_linked[:1]))
+
     print("Role scoping (SME — Pharmacology)")
     c2 = TestClient(app)
     c2.post("/login", data={"email": "sme.pharmacology@riper.test", "password": "sme123"})
