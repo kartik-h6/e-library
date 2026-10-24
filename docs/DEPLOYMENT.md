@@ -5,7 +5,7 @@ Two things deploy, independently:
 | Part | Where | How |
 |---|---|---|
 | `frontend/` | GitHub Pages | automatic — `.github/workflows/pages.yml` on every push to `main` |
-| `backend/` | a small host + PostgreSQL | manual, below |
+| `backend/` | a small host | manual, below |
 
 The frontend is **already live**. This runbook is for the backend, which is optional: without it
 the site works fully static, and students simply don't get live material.
@@ -14,11 +14,18 @@ the site works fully static, and students simply don't get live material.
 
 ## 1. Prerequisites
 
-- A host account — Render, Fly.io or Railway (free tiers exist).
-- A PostgreSQL database — the host's own, or Neon / Supabase free tier.
+- An Oracle Cloud account (recommended), or any host — Render, Fly.io, Railway.
+- No database to buy: the recommended setup uses one SQLite file.
 - The Drive folder for material (you handle that).
 
 ## 2. Deploy the backend
+
+**Recommended: an Oracle Cloud Always Free VM — the whole kit is in
+[`backend/deploy/`](../backend/deploy/README.md).** It gives an always-on machine at ₹0, one
+setup script, nginx with TLS, a systemd service and nightly backups, and the database stays a
+single SQLite file. It also avoids the cold starts that free app-hosting tiers impose.
+
+The steps below are the generic managed-host alternative (Render, Fly, Railway).
 
 1. **Create the database.** On your host, create a PostgreSQL instance and copy its connection
    URL. Rewrite the scheme for SQLAlchemy: `postgres://…` → `postgresql+psycopg://…`.
@@ -31,7 +38,7 @@ the site works fully static, and students simply don't get live material.
    | Variable | Value |
    |---|---|
    | `DATABASE_URL` | the PostgreSQL URL from step 1 |
-   | `SESSION_SECRET` | a long random string (`python -c "import secrets;print(secrets.token_urlsafe(48))"`) |
+   | `SESSION_SECRET` | a long random string |
    | `DEPT_MASTER_PASSWORD` | a strong password for every department master |
    | `DRIVE_FOLDER_URL` | your shared Drive folder link |
    | `PUBLIC_SITE_URL` | `https://kartik-h6.github.io/e-library/` |
@@ -64,8 +71,8 @@ pages load material live.
 
 - **Frontend:** revert the commit; Pages redeploys from the previous commit.
 - **Backend:** roll back to the previous deploy from the host's dashboard. Record the previous
-  good commit SHA in the release checklist *before* deploying.
-- **Database:** take a backup before any schema change (`pg_dump`, or the host's backup feature).
+  good commit SHA before deploying.
+- **Database:** take a backup before any schema change (nightly backups run automatically).
 
 ---
 
@@ -76,15 +83,13 @@ Approximate, and free tiers change often — **verify current pricing before com
 | Item | Typical free tier | When it starts costing |
 |---|---|---|
 | GitHub Pages | free for public repos | never |
-| Web service | free instance that **sleeps when idle** | ~$7/mo for always-on |
-| PostgreSQL | free tier is often **time-limited or small** | ~$7/mo for a persistent instance |
+| **Oracle Always Free VM** (recommended) | free, always on | never |
+| Web service (Render/Fly) | free instance that **sleeps when idle** | ~$7/mo for always-on |
+| PostgreSQL (managed) | free tier is often **time-limited or small** | ~$7/mo for a persistent instance |
 
-**Realistic range: ₹0/month** if you accept the free tier (the service sleeps, so the first
-request after idle takes ~30 s to wake), up to roughly **₹600–1,200/month** for always-on
-service plus a persistent database.
+**Realistic range: ₹0/month** on the recommended stack, up to roughly **₹600–1,200/month** if you
+want managed, always-on hosting plus a persistent database.
 
-Ways to keep it at zero: keep the database on a provider whose free tier doesn't expire (Neon and
-Supabase both offer one), keep the web service on a free instance, and accept the cold-start.
 There is no other recurring cost — no CDN, no email service, no paid API.
 
 ## 7. Maintenance
