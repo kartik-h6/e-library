@@ -8,28 +8,18 @@ one page per subject, a 404 page, plus shared assets and data/schema.json.
 Run from the repository root:  python3 build/generate.py
 """
 import json, os, re, shutil, datetime
-from urllib.parse import urlencode
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CAT = json.load(open(os.path.join(ROOT, "data", "catalogue.json"), encoding="utf-8"))
 
-KINDS = [("notes", "Notes & PDFs", ""),
-         ("paper", "Previous question papers",
-          "None yet — the 2026 (NEP 2020) batch is the first cohort, so no papers have been set."),
-         ("manual", "Lab manuals", ""), ("book", "Reference books", "")]
-ISSUES_URL = "https://github.com/kartik-h6/e-library/issues/new"
+# How each kind of material is labelled on a subject page.
+KIND_LABEL = {"notes": "Notes", "paper": "Question paper", "manual": "Lab manual",
+              "book": "Reference book", "other": "Material"}
 # Optional: the hosted backend's sign-in URL. Empty hides the "Sign in" link in the nav.
 SIGN_IN_URL = os.environ.get("SIGN_IN_URL", "")
 # Optional: the staff service's base URL. When set, subject pages load published material live
 # from its public API, so students see updates without a rebuild.
 API_BASE = os.environ.get("API_BASE", "")
-
-
-def issue_url(s, sm, kind_label):
-    title = f"[Material] {s['code']} {s['title']} — {sm['label']}"
-    body = (f"Subject: {s['code']} {s['title']}\nSemester: {sm['label']}\nType: {kind_label}\n\n"
-            "Link (Google Drive, etc.):\n\nSource / licence:\n\nNotes for the reviewer:\n")
-    return ISSUES_URL + "?" + urlencode({"title": title, "body": body})
 
 
 TYPE_LABEL = {"theory": "Theory", "practical": "Practical", "aec": "AEC — Ability Enhancement",
@@ -160,13 +150,19 @@ a.card:hover{transform:translateY(-2px);border-color:var(--primary-strong);box-s
 .cta-band h2{color:#fff;margin:0 0 .2rem}
 .cta-band p{margin:0;color:#a7f3d0}
 .footer-nav a{margin:0 .4rem;color:var(--primary)}
-.res-grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-.res-col{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:.9rem 1rem}
-.res-col h3{font-size:.98rem;margin:0 0 .5rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
-.res-list{list-style:none;padding:0;margin:0 0 .6rem}
-.res-list li{display:flex;justify-content:space-between;gap:.6rem;padding:.35rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
+/* material, filed under the unit it belongs to */
+.unit{justify-content:space-between;flex-wrap:wrap}
+.unit .u-title{flex:1 1 15rem}
+.unit-links{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.res-inline{list-style:none;padding:0;margin:0;display:flex;gap:.5rem;flex-wrap:wrap;justify-content:flex-end}
+.res-item{display:inline-flex;align-items:center;gap:.45rem;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:.2rem .25rem .2rem .7rem;font-size:.84rem}
+.res-kind{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.03em}
+.res-title{font-weight:500}
+.open-btn{display:inline-flex;align-items:center;background:var(--primary);color:#fff;font-weight:600;font-size:.8rem;padding:.25rem .7rem;border-radius:999px}
+.open-btn:hover{text-decoration:none;filter:brightness(1.1)}
+.none{color:var(--muted);font-size:.84rem}
+.subject-material{list-style:none;padding:0;margin:0;display:flex;gap:.5rem;flex-wrap:wrap}
 .empty-mini{font-size:.86rem;color:var(--muted);margin:0 0 .6rem}
-.res-submit{font-size:.84rem;font-weight:600}
 .sem-note{margin-bottom:1.2rem}
 """
 
@@ -264,8 +260,8 @@ document.addEventListener('DOMContentLoaded', function(){
 });"""
 
 JS_MATERIAL = """/* material.js — live material for a subject page.
-   Fetches published resources from the staff library so students see updates without a
-   rebuild. No-ops when no API base is configured, leaving the static fallback in place. */
+   Fetches published resources from the staff library and files each one under its unit, so
+   students see updates without a rebuild. No-ops when no API base is configured. */
 (function () {
   var box = document.querySelector('[data-material]');
   if (!box) return;
@@ -273,6 +269,8 @@ JS_MATERIAL = """/* material.js — live material for a subject page.
   var code = box.getAttribute('data-code');
   if (!api || !code) return;
   var note = document.getElementById('live-note');
+  var LABEL = { notes: 'Notes', paper: 'Question paper', manual: 'Lab manual',
+                book: 'Reference book', other: 'Material' };
 
   function safeUrl(u) {
     return (typeof u === 'string' && /^(https?:\\/\\/|\\/)/.test(u)) ? u : '';
@@ -282,32 +280,41 @@ JS_MATERIAL = """/* material.js — live material for a subject page.
     d.textContent = (s == null ? '' : String(s));
     return d.innerHTML;
   }
+  function item(r) {
+    var url = safeUrl(r.url);
+    var btn = url
+      ? '<a class="open-btn" href="' + esc(url) + '" target="_blank" rel="noopener">Open</a>'
+      : '<span class="none">link missing</span>';
+    return '<li class="res-item"><span class="res-kind">' + (LABEL[r.type] || 'Material') +
+           '</span><span class="res-title">' + esc(r.title) + '</span>' + btn + '</li>';
+  }
 
   fetch(api + '/api/public/library', { headers: { 'Accept': 'application/json' } })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (data) {
       if (!data || !data.subjects) return;
       var items = data.subjects[code] || [];
-      var byKind = {};
-      items.forEach(function (it) { (byKind[it.type] = byKind[it.type] || []).push(it); });
-      box.querySelectorAll('[data-kind]').forEach(function (col) {
-        var list = byKind[col.getAttribute('data-kind')] || [];
-        var count = col.querySelector('[data-count]');
-        if (count) count.textContent = list.length;
-        var body = col.querySelector('.res-body');
-        if (!body) return;
-        if (list.length) {
-          body.innerHTML = '<ul class="res-list">' + list.map(function (r) {
-            var url = safeUrl(r.url);
-            var link = url ? ' <a href="' + esc(url) + '" target="_blank" rel="noopener">Open</a>' : '';
-            return '<li><span>' + esc(r.title) + '</span>' + link + '</li>';
-          }).join('') + '</ul>';
+      var byUnit = {}, general = [];
+      items.forEach(function (it) {
+        if (it.unitSeq) { (byUnit[it.unitSeq] = byUnit[it.unitSeq] || []).push(it); }
+        else { general.push(it); }
+      });
+      box.querySelectorAll('[data-unit]').forEach(function (li) {
+        var list = byUnit[li.getAttribute('data-unit')] || [];
+        var body = li.querySelector('[data-unit-body]');
+        if (body && list.length) {
+          body.innerHTML = '<ul class="res-inline">' + list.map(item).join('') + '</ul>';
         }
       });
+      var sb = box.querySelector('[data-subject-body]');
+      if (sb && general.length) {
+        sb.innerHTML = '<ul class="subject-material">' + general.map(item).join('') + '</ul>';
+      }
       if (note) {
-        note.textContent = items.length
-          ? 'Live from the staff library — ' + items.length + ' item(s), updated as staff publish.'
-          : 'No published material for this subject yet.';
+        var n = items.length;
+        note.textContent = n
+          ? 'Live — ' + n + ' item' + (n === 1 ? '' : 's') + ' from the staff library, updated as departments publish.'
+          : 'No material has been published for this subject yet.';
       }
     })
     .catch(function () { /* not configured or offline: keep the static fallback */ });
@@ -383,7 +390,8 @@ SCHEMA = {
                       "language": {"type": "string"}, "source": {"type": "string"},
                       "url": {"type": "string"}, "rights": {"type": "string"},
                       "status": {"enum": ["draft", "needs-review", "verified", "published", "archived"]},
-                      "reviewer": {"type": "string"}, "lastChecked": {"type": "string"}
+                      "reviewer": {"type": "string"}, "lastChecked": {"type": "string"},
+                      "unitSeq": {"type": ["integer", "null"]}, "unit": {"type": "string"}
                     }
                   }
                 }
@@ -601,44 +609,58 @@ def build_subject(sm, s):
     root = "../../"
     trail = [("Home", "index.html"), ("Browse", "semesters/index.html"),
              (sm["label"], f'semester-{sm["number"]}/'), (s["code"], None)]
-    # units
-    if s.get("units"):
-        units = '<ul class="units">' + "".join(
-            f'<li><span class="u-no">Unit {["I","II","III","IV","V"][i] if i<5 else i+1}</span>'
-            f'<span>{esc(u)}</span></li>' for i, u in enumerate(s["units"])) + "</ul>"
-        units_block = f'<section class="section"><h2>Units</h2>{units}</section>'
-    else:
-        units_block = ('<section class="section"><h2>Units</h2>'
-                       '<div class="empty"><p>Unit breakdown is not yet available for this subject.</p>'
-                       '<p class="meta">It will be added from the official syllabus.</p></div></section>')
+    # material, filed under the unit it belongs to
+    res = s.get("resources") or []
+    by_unit, general = {}, []
+    for r in res:
+        seq = r.get("unitSeq")
+        (by_unit.setdefault(seq, []) if seq else general).append(r)
+
+    def link(r):
+        url = r.get("url") or ""
+        kind = KIND_LABEL.get(r.get("type") or "notes", "Material")
+        btn = (f'<a class="open-btn" href="{esc(url)}" target="_blank" rel="noopener">Open</a>'
+               if url else '<span class="none">link missing</span>')
+        return (f'<li class="res-item"><span class="res-kind">{esc(kind)}</span>'
+                f'<span class="res-title">{esc(r.get("title") or "")}</span>{btn}</li>')
+
     # options
     opt = ""
     if s.get("options"):
         opt = '<div class="options"><b>Choose one:</b> ' + esc(" · ".join(s["options"])) + "</div>"
-    # resources — the same four sections exist for every subject
-    res = s.get("resources") or []
-    cols = []
-    for kind, label, note in KINDS:
-        items = [r for r in res if (r.get("type") or "notes") == kind]
-        submit = (f'<a class="res-submit" href="{esc(issue_url(s, sm, label))}" target="_blank" rel="noopener">'
-                  f'Submit {label.lower()} →</a>')
-        if items:
-            inner = '<ul class="res-list">' + "".join(
-                f'<li><span>{esc(r["title"])}</span> <a href="{esc(r["url"])}" target="_blank" rel="noopener">Open</a></li>'
-                for r in items) + "</ul>"
-        elif note:
-            inner = f'<p class="empty-mini">{esc(note)}</p>'
-            submit = ""
-        else:
-            inner = '<p class="empty-mini">Nothing added yet.</p>'
-        cols.append(
-            f'<div class="res-col" data-kind="{kind}"><h3>{label} '
-            f'<span class="badge" data-count>{len(items)}</span></h3>'
-            f'<div class="res-body">{inner}</div>{submit}</div>')
-    res_block = (f'<div class="res-grid" data-material data-code="{esc(s["code"])}" '
-                 f'data-api="{esc(API_BASE)}">' + "".join(cols) + "</div>")
-    res_head = ('<p class="meta" id="live-note">Material is added subject by subject and reviewed before '
-                'it appears. Nothing here yet? Use a submit link — it opens a prefilled issue on GitHub.</p>')
+
+    # units — each row carries its own Open buttons
+    if s.get("units"):
+        rows = []
+        for i, u in enumerate(s["units"]):
+            seq = i + 1
+            items = by_unit.get(seq, [])
+            inner = (f'<ul class="res-inline">{"".join(link(r) for r in items)}</ul>'
+                     if items else '<span class="none">No material yet</span>')
+            rows.append(
+                f'<li class="unit" data-unit="{seq}">'
+                f'<span class="u-no">Unit {["I","II","III","IV","V"][i] if i < 5 else seq}</span>'
+                f'<span class="u-title">{esc(u)}</span>'
+                f'<span class="unit-links" data-unit-body>{inner}</span></li>')
+        units_block = ('<section class="section"><h2>Units</h2>'
+                       f'<ol class="units">{"".join(rows)}</ol></section>')
+    else:
+        units_block = ('<section class="section"><h2>Units</h2>'
+                       '<div class="empty"><p>Unit breakdown is not yet available for this subject.</p>'
+                       '<p class="meta">It will be added from the official syllabus.</p></div></section>')
+
+    # material that is not tied to a single unit
+    gen_inner = (f'<ul class="subject-material">{"".join(link(r) for r in general)}</ul>'
+                 if general else
+                 '<div class="empty"><p>No material has been published for this subject yet.</p>'
+                 '<p class="meta">It appears here, unit by unit, as departments publish it.</p></div>')
+    subject_block = ('<section class="section"><h2>Whole-subject material</h2>'
+                     f'<div data-subject-body>{gen_inner}</div></section>')
+
+    material = (f'<div data-material data-code="{esc(s["code"])}" data-api="{esc(API_BASE)}">'
+                '<p class="meta" id="live-note">Material is added unit by unit and reviewed before it '
+                'appears. Open a unit to read its notes and papers.</p>'
+                f'{units_block}{subject_block}</div>')
     body = f"""{breadcrumbs(root, trail)}
 <div class="row" style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap">
   <div>
@@ -649,8 +671,7 @@ def build_subject(sm, s):
   <button class="btn secondary" data-back>← Back</button>
 </div>
 {opt}
-{units_block}
-<section class="section"><h2>Study material</h2>{res_head}{res_block}</section>
+{material}
 <section class="section">
   <p class="meta">Structure sourced from the PCI B.Pharm syllabus 2026 (NEP 2020) — interim source.
   Corrections welcome via the <a href="{root}contact/index.html">contact page</a>.</p>

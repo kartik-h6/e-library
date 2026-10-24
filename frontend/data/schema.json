@@ -194,6 +194,15 @@
                       },
                       "lastChecked": {
                         "type": "string"
+                      },
+                      "unitSeq": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ]
+                      },
+                      "unit": {
+                        "type": "string"
                       }
                     }
                   }
