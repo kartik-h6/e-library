@@ -340,6 +340,7 @@ def public_library(db=Depends(get_db)):
     already published.
     """
     codes = {s.id: s.code for s in db.query(Subject).all()}
+    unit_of = {u.id: u for u in db.query(Unit).all()}
     rows = (db.query(Resource)
             .filter(Resource.status == "published", Resource.archived.is_(False))
             .order_by(Resource.subject_id, Resource.id.desc()).all())
@@ -351,6 +352,9 @@ def public_library(db=Depends(get_db)):
         out.setdefault(code, []).append({
             "title": r.title, "type": r.type, "language": r.language,
             "source": r.source, "url": r.url, "lastChecked": r.last_checked,
+            # which unit it belongs to, so the page can file it under that unit
+            "unitSeq": unit_of[r.unit_id].seq if r.unit_id in unit_of else None,
+            "unit": unit_of[r.unit_id].title if r.unit_id in unit_of else "",
         })
     return {"generatedAt": datetime.utcnow().isoformat() + "Z", "subjects": out}
 
