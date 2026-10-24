@@ -6,9 +6,9 @@ it installs.
 ```
 deploy/
   setup.sh              one-shot provisioning (run once, as root)
-  elibrary.service      systemd unit
-  nginx.conf            reverse proxy config
-  backup.sh             nightly DB + uploads backup
+  elibrary.service      systemd unit → /etc/systemd/system/
+  nginx.conf            reverse proxy → /etc/nginx/sites-available/elibrary
+  backup.sh             nightly DB + uploads backup → /usr/local/bin/elibrary-backup
   deploy.sh             redeploy after a push
 ```
 
@@ -27,9 +27,9 @@ deploy/
 Oracle blocks everything but SSH by default, and its Ubuntu images add their own firewall rules.
 **Missing either step is the most common reason the site can't reach the API.**
 
-- **Cloud side:** Networking → VCN → Security Lists → Default → **Add Ingress Rules** for
+- **Cloud side:** Networking → VCN → Security Lists → *Default* → **Add Ingress Rules** for
   `0.0.0.0/0` on TCP **80** and **443**.
-- **Machine side:** `setup.sh` adds the `iptables` rules for you. By hand:
+- **Machine side:** `setup.sh` adds the `iptables` rules for you. If you set up by hand:
   ```bash
   iptables -I INPUT -p tcp --dport 80  -j ACCEPT
   iptables -I INPUT -p tcp --dport 443 -j ACCEPT
@@ -69,7 +69,8 @@ HTTP API. So the backend must be HTTPS too, which means it needs a hostname. Two
   step. No domain purchase needed.
 
 If you'd rather not open ports at all, a **Cloudflare Tunnel** gives you HTTPS with no inbound
-ports and no certificate management — it does add a Cloudflare dependency, so it's a trade.
+ports and no certificate management — it does add a Cloudflare dependency, so it's a trade, not a
+free lunch.
 
 ## 5. Point the site at it
 
@@ -91,10 +92,10 @@ git add -A && git commit -m "Connect site to the staff service" && git push
 
 ## Notes
 
-- **The database is one SQLite file** at `/var/lib/elibrary/elib.db`. At this scale that's
-  deliberate — back it up by copying it, move it anywhere, open it with any SQLite tool.
+- **The database is one SQLite file** at `/var/lib/elibrary/elib.db`. That's deliberate at this
+  scale — back it up by copying it, move it anywhere, open it with any SQLite tool.
 - **The service binds to `127.0.0.1` only.** nginx is the only thing exposed to the internet.
-- **Nothing secret is in the repository.** All configuration lives in
-  `/etc/elibrary/elibrary.env`, readable only by root.
+- **Nothing secret is in the repository.** All configuration is in `/etc/elibrary/elibrary.env`,
+  readable only by root.
 - **Students never touch this VM.** If it's down, the public site still works; only the staff
   dashboard and live material are affected.
