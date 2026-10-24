@@ -3,6 +3,13 @@
 An always-on VM at ₹0. This folder is the whole deployment: one setup script, and the unit files
 it installs.
 
+Written for Oracle's Always Free VM, but it works on **any** Ubuntu 22.04/24.04 machine with a
+public IP — including Google Cloud's always-free `e2-micro`. Only the VM's IP address changes;
+the script, the DNS record and the commands are identical.
+
+> **Never done this before?** Read [`../../docs/FIRST_DEPLOY.md`](../../docs/FIRST_DEPLOY.md)
+> first — the same steps in plain English, no computer-science background assumed.
+
 ```
 deploy/
   setup.sh              one-shot provisioning (run once, as root)

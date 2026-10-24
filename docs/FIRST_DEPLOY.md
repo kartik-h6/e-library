@@ -189,13 +189,26 @@ Ubuntu machine they provide.
 
 ## 6. If Oracle turns you down
 
-Oracle sometimes rejects signups or has no free machines available in your region. You are not
-stuck:
+Oracle sometimes rejects signups or has no free machines in your region. Options, best first:
 
-- **Fly.io / Render** — free, but the service sleeps when idle, so the first visit after a quiet
-  spell takes ~30 seconds. Acceptable to start.
-- **A small VPS in India** — around ₹250–400 a month, always on, no signup lottery. The same
-  `setup.sh` works on it.
+1. **Google Cloud's always-free VM.** The closest match to Oracle: one `e2-micro` instance with a
+   30 GB disk, free with no end date, in `us-west1`, `us-central1` or `us-east1`. Signup asks for a
+   card to confirm you are real (a temporary hold of about $1, never an actual charge). The same
+   `setup.sh` works unchanged. It is a US region, so expect ~200 ms latency from India — irrelevant
+   for a notes library.
+2. **A small VPS in India** — around ₹250–400 a month. Always on, persistent, low latency, and no
+   signup lottery. The most reliable option, and the same script works on it.
+3. **Defer the backend.** The site already works fully static. Add the backend when staff
+   self-serve actually matters — there is no content yet, so there is no rush.
+
+**Do not use Render's free tier for this.** Its filesystem is *ephemeral*: a local SQLite database
+and uploaded files are **erased** every time the service redeploys, restarts, or spins down after
+inactivity. Your material would silently disappear. Persistent disks there require a paid instance,
+and free Postgres expires after 30 days.
+
+**Cloudflare cannot host this backend as it stands.** Cloudflare runs JavaScript Workers, not a
+long-running Python process with a SQLite file. Moving there would mean rewriting the backend, not
+migrating it. (Cloudflare *can* stay in front of it as your DNS and CDN — that part is unchanged.)
 
 ## 7. When you get stuck
 
