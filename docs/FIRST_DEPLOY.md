@@ -45,8 +45,19 @@ Sign in at **duckdns.org** with Google or GitHub. Create a subdomain, e.g. `ripe
 You now own `riperlibrary.duckdns.org`. In the box next to it, paste the IP address of your machine
 — you will get that in Step 1, so come back and fill it in then.
 
-> Already have a domain? Skip this. Just add an "A record" pointing at your machine's IP. Your
-> registrar's help page explains it; it is one line.
+> **Already own a domain? Skip DuckDNS entirely** and use a subdomain of it — it looks better, it
+> is yours rather than the college's, and it costs nothing extra. In your domain's DNS settings,
+> add one record:
+>
+> | Field | Value |
+> |---|---|
+> | Type | `A` |
+> | Name / Host | `library` |
+> | Value / Points to | your machine's public IP |
+> | TTL | default |
+>
+> That gives you `library.yourdomain.in`. Use that name everywhere below instead of the DuckDNS
+> one. Your main website is untouched — a subdomain is a separate signboard, not a new building.
 
 ### Step 1 — Create the machine
 
