@@ -2,6 +2,10 @@
 
 No computer-science background needed. This is a recipe: follow it top to bottom.
 
+> **This project's setup:** domain registered at **BigRock**, DNS managed on **Cloudflare**, public
+> site on **GitHub Pages**, staff service on an **Oracle Always Free VM** at
+> `library.techstudyhubcore.in`.
+
 ---
 
 ## 1. The words, explained
@@ -45,19 +49,31 @@ Sign in at **duckdns.org** with Google or GitHub. Create a subdomain, e.g. `ripe
 You now own `riperlibrary.duckdns.org`. In the box next to it, paste the IP address of your machine
 — you will get that in Step 1, so come back and fill it in then.
 
-> **Already own a domain? Skip DuckDNS entirely** and use a subdomain of it — it looks better, it
-> is yours rather than the college's, and it costs nothing extra. In your domain's DNS settings,
-> add one record:
+> **You already own a domain — skip DuckDNS entirely.** `techstudyhubcore.in` is registered at
+> BigRock, but its DNS is managed on **Cloudflare**, so the record goes in Cloudflare, not BigRock.
 >
-> | Field | Value |
-> |---|---|
-> | Type | `A` |
-> | Name / Host | `library` |
-> | Value / Points to | your machine's public IP |
-> | TTL | default |
+> 1. Sign in at **dash.cloudflare.com** and click `techstudyhubcore.in`.
+> 2. Left menu → **DNS** → **Records** → **Add record**.
+> 3. Fill it in exactly like this:
 >
-> That gives you `library.yourdomain.in`. Use that name everywhere below instead of the DuckDNS
-> one. Your main website is untouched — a subdomain is a separate signboard, not a new building.
+>    | Field | Value |
+>    |---|---|
+>    | Type | `A` |
+>    | Name | `library` |
+>    | IPv4 address | your machine's public IP |
+>    | Proxy status | **DNS only** — the **grey** cloud, *not* the orange one |
+>    | TTL | Auto |
+>
+> 4. **Save.** You now have `library.techstudyhubcore.in`.
+>
+> **Two Cloudflare things worth knowing:**
+> - Keep the cloud **grey** for now. Orange puts Cloudflare in front of your server — genuinely
+>   useful later, but it adds one setting that breaks everything if it's wrong.
+> - If you ever switch it to orange, you **must** set **SSL/TLS → Overview → Full (strict)**.
+>   Never choose "Flexible": with our HTTP→HTTPS redirect it causes an endless redirect loop.
+>
+> Your main website at `techstudyhubcore.in` is untouched — a subdomain is a separate signboard,
+> not a new building.
 
 ### Step 1 — Create the machine
 
