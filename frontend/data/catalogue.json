@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "curriculum": {
     "programme": "B.Pharm",
-    "institution": "Raghavendra Institute of Pharmaceutical Education and Research (RIPER), Anantapur",
+    "institution": "",
     "awardingUniversity": "Jawaharlal Nehru Technological University Anantapur (JNTUA)",
     "documentTitle": "Syllabus \u2014 Bachelor of Pharmacy (B.Pharm) 2026, as per NEP 2020",
     "documentVersion": "2026",
@@ -10,7 +10,7 @@
     "sourceUrl": "https://pci.gov.in/documents/1455/B.Pharm_Syllabus_2026-_NEP2020_compressed.pdf",
     "checkedAt": "2026-10-20",
     "status": "provisional",
-    "note": "Interim source only. RIPER's official syllabus for the applicable cohort is to be supplied and verified before this is treated as authoritative (see docs/CURRICULUM_AND_CONTENT.md)."
+    "note": "Interim source only. Your institution's official syllabus for the applicable cohort is to be supplied and verified before this is treated as authoritative (see docs/CURRICULUM_AND_CONTENT.md)."
   },
   "semesters": [
     {

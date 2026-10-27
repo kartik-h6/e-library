@@ -1,6 +1,6 @@
 # frontend/
 
-The public static site for the RIPER e-Library — home, browse/search, semester and subject
+The public static site for the TechStudyHubCore Pharmacy — home, browse/search, semester and subject
 pages, and an honest empty state wherever material doesn't exist yet.
 
 It is **generated** from a JSON catalogue, so the structure lives in one place.

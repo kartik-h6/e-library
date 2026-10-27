@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static site generator for the RIPER e-Library (P0).
+"""Static site generator for the TechStudyHubCore Pharmacy (P0).
 
 Reads data/catalogue.json and writes the public static site:
 home, about, semesters, search, contribute, contact, one page per semester,
@@ -320,7 +320,7 @@ JS_MATERIAL = """/* material.js — live material for a subject page.
     .catch(function () { /* not configured or offline: keep the static fallback */ });
 })();"""
 
-LOGO = """<svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="RIPER e-Library logo" xmlns="http://www.w3.org/2000/svg">
+LOGO = """<svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="TechStudyHubCore Pharmacy logo" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="tshcGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#00f3ff"/>
@@ -338,7 +338,7 @@ LOGO = """<svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="R
 
 SCHEMA = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "RIPER e-Library catalogue",
+  "title": "TechStudyHubCore Pharmacy catalogue",
   "type": "object",
   "required": ["schemaVersion", "curriculum", "semesters"],
   "properties": {
@@ -438,7 +438,7 @@ def shell(title, desc, root, body, active="", extra_scripts="", data_root=None):
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="{root}index.html">{LOGO}<span><b>RIPER e-Library</b><span>B.Pharm &middot; PCI 2026 syllabus</span></span></a>
+    <a class="brand" href="{root}index.html">{LOGO}<span><b>TechStudyHubCore</b><span>Pharmacy &middot; B.Pharm (PCI 2026)</span></span></a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><span class="visually-hidden">Menu</span></button>
   </div>
   <nav class="site-nav" id="site-nav" data-open="false" aria-label="Primary">
@@ -450,8 +450,8 @@ def shell(title, desc, root, body, active="", extra_scripts="", data_root=None):
 </main>
 <footer class="site-footer">
   <p class="footer-nav">{footer_links}</p>
-  <p>RIPER e-Library &middot; a student-built study library. Not an official publication of RIPER.</p>
-  <p>Course structure from the PCI B.Pharm syllabus 2026 (NEP 2020), used as an interim source pending the college's official syllabus. &copy; <span id="year"></span></p>
+  <p>TechStudyHubCore Pharmacy &middot; an independent study platform for pharmacy students. Not affiliated with the Pharmacy Council of India or any institution.</p>
+  <p>Course structure from the PCI B.Pharm syllabus 2026 (NEP 2020), used as an interim source pending your institution's official syllabus. &copy; <span id="year"></span></p>
 </footer>
 <script src="{root}assets/js/catalogue.js"></script>
 <script src="{root}assets/js/navigation.js"></script>
@@ -494,9 +494,9 @@ def build_home():
     n_cred = sum(sm["credits"] for sm in CAT["semesters"])
     body = f"""
 <section class="landing-hero">
-  <p class="eyebrow">RIPER &middot; B.Pharm study library</p>
+  <p class="eyebrow">TechStudyHubCore &middot; B.Pharm study library</p>
   <h1>Every subject, its official units, and the notes — in one place.</h1>
-  <p class="lead">The RIPER e-Library organises B.Pharm study material the way the syllabus does: by semester,
+  <p class="lead">TechStudyHubCore Pharmacy organises B.Pharm study material the way the syllabus does: by semester,
   by subject, by unit. No hunting through chat groups or scattered drives — pick your semester and go.</p>
   <div class="hero-cta">
     <a class="btn" href="semesters/index.html">Browse the library</a>
@@ -540,7 +540,7 @@ def build_home():
 <section class="section">
   <div class="notice">
     <b>About the curriculum.</b> The course structure follows the <b>PCI B.Pharm syllabus 2026 (NEP 2020)</b>,
-    used as an <b>interim source</b> until RIPER's official syllabus for your cohort is supplied and verified.
+    used as an <b>interim source</b> until your institution's official syllabus for your cohort is supplied and verified.
     The first NEP 2020 batch was admitted in 2026, so only the earliest semesters have a cohort in session — later
     semesters are shown for reference, and no previous question papers exist yet.
   </div>
@@ -553,8 +553,8 @@ def build_home():
     <a class="btn" href="contact/index.html">Contact &amp; corrections</a>
   </div>
 </section>"""
-    write("index.html", shell("RIPER e-Library — B.Pharm study library",
-          "A semester-wise B.Pharm study library for RIPER students, mapped to the PCI 2026 syllabus.", "", body, active="home"))
+    write("index.html", shell("TechStudyHubCore Pharmacy — B.Pharm study library",
+          "A semester-wise B.Pharm study library for pharmacy students, mapped to the PCI 2026 syllabus.", "", body, active="home"))
 
 
 def build_semesters():
@@ -578,8 +578,8 @@ def build_semesters():
   <h2>All semesters</h2>
   <div class="grid grid-2">{rows}</div>
 </div>"""
-    write("semesters/index.html", shell("Browse — RIPER e-Library",
-          "Browse and search all eight B.Pharm semesters in the RIPER e-Library.", "../", body, active="browse"))
+    write("semesters/index.html", shell("Browse — TechStudyHubCore Pharmacy",
+          "Browse and search all eight B.Pharm semesters in the TechStudyHubCore Pharmacy.", "../", body, active="browse"))
 
 
 def build_semester(sm):
@@ -601,8 +601,8 @@ def build_semester(sm):
 {note}
 {''.join(groups)}"""
     write(f'semester-{sm["number"]}/index.html',
-          shell(f'{sm["label"]} — RIPER e-Library',
-                f'{sm["label"]} subjects in the RIPER e-Library (PCI 2026 B.Pharm).', root, body))
+          shell(f'{sm["label"]} — TechStudyHubCore Pharmacy',
+                f'{sm["label"]} subjects in the TechStudyHubCore Pharmacy (PCI 2026 B.Pharm).', root, body))
 
 
 def build_subject(sm, s):
@@ -678,7 +678,7 @@ def build_subject(sm, s):
 </section>"""
     scripts = '<script src="../../assets/js/material.js"></script>' if API_BASE else ""
     write(f'semester-{sm["number"]}/{s["slug"]}/index.html',
-          shell(f'{s["code"]} {s["title"]} — RIPER e-Library',
+          shell(f'{s["code"]} {s["title"]} — TechStudyHubCore Pharmacy',
                 f'{s["title"]} ({s["code"]}), {sm["label"]} — units and study material.',
                 root, body, extra_scripts=scripts))
 
@@ -688,11 +688,11 @@ def build_about():
     body = f"""{breadcrumbs('../', [("Home","index.html"),("About",None)])}
 <h1>About this library</h1>
 <div class="stack">
-<p>The <b>RIPER e-Library</b> is a free, student-run study library for <b>B.Pharm</b> students. Its job is simple:
+<p><b>TechStudyHubCore Pharmacy</b> is a free study platform for <b>B.Pharm</b> students. Its job is simple:
 give a predictable path from a semester to a subject to a unit, so material is easy to find instead of scattered.</p>
 <h2>Curriculum source</h2>
 <p>The structure in this build comes from <b>{esc(c["documentTitle"])}</b> issued by the
-<b>{esc(c["authority"])}</b>. It is used as an <b>interim source</b> (status: {esc(c["status"])}) until RIPER's
+<b>{esc(c["authority"])}</b>. It is used as an <b>interim source</b> (status: {esc(c["status"])}) until your institution's
 official syllabus for the applicable cohort is supplied and verified.</p>
 <ul class="meta">
   <li>Authority: {esc(c["authority"])}</li>
@@ -707,10 +707,10 @@ official syllabus for the applicable cohort is supplied and verified.</p>
   <li>We do not mirror copyrighted textbooks — material is linked from its lawful source.</li>
   <li>This is a static site: there is no login and no shared upload database.</li>
 </ul>
-<p class="meta">This is not an official publication of RIPER.</p>
+<p class="meta">An independent study platform. Not affiliated with the Pharmacy Council of India or any institution.</p>
 </div>"""
-    write("about/index.html", shell("About — RIPER e-Library",
-          "About the RIPER e-Library, its curriculum source and content policy.", "../", body, active="about"))
+    write("about/index.html", shell("About — TechStudyHubCore Pharmacy",
+          "About the TechStudyHubCore Pharmacy, its curriculum source and content policy.", "../", body, active="about"))
 
 
 def build_contact():
@@ -735,8 +735,8 @@ it will be reviewed before it appears.</p>
 <p class="meta">See <a href="https://github.com/kartik-h6/e-library/blob/main/CONTRIBUTING.md">CONTRIBUTING</a> in the repository for the full guide.</p>
 <p class="meta">Do not post credentials or personal data in public issues.</p>
 </div>"""
-    write("contact/index.html", shell("Contact — RIPER e-Library",
-          "Contact and corrections for the RIPER e-Library.", "../", body, active="contact"))
+    write("contact/index.html", shell("Contact — TechStudyHubCore Pharmacy",
+          "Contact and corrections for the TechStudyHubCore Pharmacy.", "../", body, active="contact"))
 
 
 def build_404():
@@ -747,7 +747,7 @@ def build_404():
   <p style="margin-top:.9rem"><a class="btn" href="index.html">Go to the home page</a>
   <a class="btn secondary" href="semesters/index.html">Browse the library</a></p>
 </section>"""
-    write("404.html", shell("Page not found — RIPER e-Library",
+    write("404.html", shell("Page not found — TechStudyHubCore Pharmacy",
           "The page could not be found.", "", body, data_root=""))
 
 
@@ -792,8 +792,8 @@ def build_staff():
   <p>Department staff sign in to add and manage their subjects' material.</p>
   {cta}
 </section>"""
-    write("staff/index.html", shell("Staff access — RIPER e-Library",
-          "How students and staff access the RIPER e-Library.", "../", body, active="staff"))
+    write("staff/index.html", shell("Staff access — TechStudyHubCore Pharmacy",
+          "How students and staff access the TechStudyHubCore Pharmacy.", "../", body, active="staff"))
 
 
 def build_privacy():
@@ -832,7 +832,7 @@ def build_privacy():
   <h2>Questions</h2>
   <p>To ask about or correct anything held, use the <a href="../contact/index.html">contact page</a>.</p>
 </section>"""
-    write("privacy/index.html", shell("Privacy — RIPER e-Library",
+    write("privacy/index.html", shell("Privacy — TechStudyHubCore Pharmacy",
           "Privacy: students are anonymous; nothing is collected about them.", "../", body))
 
 
@@ -841,10 +841,10 @@ def build_terms():
 <h1>Terms of use</h1>
 <section class="section">
   <ul>
-    <li>This is a <b>student-built study aid</b>, not an official publication of RIPER, and is not
-      endorsed by or affiliated with the college or the Pharmacy Council of India.</li>
+    <li>This is an <b>independent study platform</b>, not affiliated with or endorsed by the Pharmacy
+      Council of India or any college or university.</li>
     <li>The course structure follows the <b>PCI B.Pharm syllabus 2026 (NEP 2020)</b> as an interim
-      source until RIPER's own syllabus is supplied and verified. Always check the official syllabus.</li>
+      source until your institution's official syllabus is supplied and verified. Always check the official syllabus.</li>
     <li>Material is provided <b>as-is, without warranty</b>. Verify anything you rely on.</li>
     <li>Do not submit copyrighted material you have no right to share, paid coaching material,
       restricted institutional files, or personal or confidential data.</li>
@@ -853,8 +853,8 @@ def build_terms():
   </ul>
 </section>
 <p class="meta">See also the <a href="../privacy/index.html">privacy notice</a>.</p>"""
-    write("terms/index.html", shell("Terms — RIPER e-Library",
-          "Terms of use for the RIPER e-Library.", "../", body))
+    write("terms/index.html", shell("Terms — TechStudyHubCore Pharmacy",
+          "Terms of use for the TechStudyHubCore Pharmacy.", "../", body))
 
 
 def main():
