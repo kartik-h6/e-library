@@ -54,8 +54,12 @@ sudo DOMAIN=<your-hostname> bash ~/e-library/backend/deploy/setup.sh
 Then edit the environment file and restart:
 
 ```bash
-sudo nano /etc/elibrary/elibrary.env     # set DEPT_MASTER_PASSWORD and DRIVE_FOLDER_URL
+sudo nano /etc/elibrary/elibrary.env     # set DRIVE_FOLDER_URL
 sudo systemctl restart elibrary
+
+# nothing is seeded — create your admin account
+cd /opt/elibrary/backend
+sudo -u elibrary .venv/bin/python -m app.manage create-admin --email you@example.com
 ```
 
 Check it:

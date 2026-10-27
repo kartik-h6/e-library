@@ -41,17 +41,18 @@ real 8-semester, 88-subject catalogue — distributed by department.
 
 ## Sign in
 
-One staff login page at `/login`. Accounts:
+One staff login page at `/login`. **No accounts are seeded** — a fresh install has none, so a
+known password can never exist. Create the administrator deliberately:
 
-| Role | Login | Password | Can |
-|---|---|---|---|
-| Super Admin | `admin@techstudyhubcore.in` | `admin123` | everything |
-| Department master | `master.pce@techstudyhubcore.in` | `dept123` | CRUD own department's subjects, upload sources |
-| Department master | `master.pco@techstudyhubcore.in` | `dept123` | …and so on for pch, pgr, ppr, gen |
-| SME (demo) | `sme.pharmacology@techstudyhubcore.in` | `sme123` | own department, submit only, cannot publish |
+```bash
+cd backend
+python -m app.manage create-admin --email you@example.com   # prompts, never echoes
+python -m app.manage list-users
+python -m app.manage set-password --email you@example.com   # rotate / reset
+```
 
-> Demo credentials only. Change them, and set `DEPT_MASTER_PASSWORD` in the environment before
-> real use.
+Passwords need at least 10 characters and are stored as PBKDF2 hashes. Roles available:
+`super_admin`, `hod`, `sme`, `contributor` — a single-admin deployment only needs the first.
 
 ## What's implemented
 
@@ -82,7 +83,7 @@ One staff login page at `/login`. Accounts:
 |---|---|---|
 | `DATABASE_URL` | `sqlite:///./elib.db` | database connection |
 | `SESSION_SECRET` | `dev-secret-change-me` | signs the session cookie — **change it** |
-| `DEPT_MASTER_PASSWORD` | `dept123` | password for every department master |
+| `COOKIE_SECURE` | `0` | send the session cookie only over HTTPS — set `1` in production |
 | `DRIVE_FOLDER_URL` | *(empty)* | shared Drive folder link shown to staff |
 | `CATALOGUE_SRC` | `../frontend/data/catalogue.json` | seed source |
 | `PUBLISH_PATH` | `../frontend/data/catalogue.json` | publish target |

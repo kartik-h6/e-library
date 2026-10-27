@@ -38,17 +38,14 @@ uvicorn app.main:app --reload      # http://127.0.0.1:8000
 
 Accounts created on first start:
 
-| Role | Login | Password | Can |
-|---|---|---|---|
-| Super Admin | `admin@techstudyhubcore.in` | `admin123` | everything |
-| Department master (one per department) | `master.pce@techstudyhubcore.in` (etc.) | `dept123` | CRUD that department's subjects + upload sources |
-| SME (demo) | `sme.pharmacology@techstudyhubcore.in` | `sme123` | submit material, cannot publish |
+**No accounts are seeded.** Create the administrator deliberately after deploying:
+
+```bash
+cd backend && python -m app.manage create-admin --email you@example.com
+```
 
 **Students have no accounts** — they read the public site anonymously. Material is kept in one
 shared Google Drive folder (`DRIVE_FOLDER_URL`); the catalogue links to it.
-
-> These are demo credentials. Change them, and set `DEPT_MASTER_PASSWORD` in the environment
-> before any real use.
 
 ## Security checks
 

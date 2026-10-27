@@ -48,13 +48,13 @@ if [ ! -f "$CONF_DIR/$SVC.env" ]; then
   cat > "$CONF_DIR/$SVC.env" <<EOF
 DATABASE_URL=sqlite:///$DATA_DIR/elib.db
 SESSION_SECRET=$SECRET
-DEPT_MASTER_PASSWORD=change-me-now
+COOKIE_SECURE=1
 DRIVE_FOLDER_URL=
-PUBLIC_SITE_URL=https://kartik-h6.github.io/e-library/
-CORS_ORIGINS=https://kartik-h6.github.io
+PUBLIC_SITE_URL=https://pharmacy.techstudyhubcore.in
+CORS_ORIGINS=https://pharmacy.techstudyhubcore.in,https://kartik-h6.github.io
 EOF
   chmod 600 "$CONF_DIR/$SVC.env"
-  echo "    wrote $CONF_DIR/$SVC.env — edit DEPT_MASTER_PASSWORD and DRIVE_FOLDER_URL, then restart"
+  echo "    wrote $CONF_DIR/$SVC.env — set DRIVE_FOLDER_URL, then restart"
 fi
 
 echo "==> systemd service"
@@ -85,14 +85,20 @@ printf '0 3 * * * root /usr/local/bin/elibrary-backup\n' > /etc/cron.d/elibrary-
 
 if [ -n "$DOMAIN" ]; then
   echo "==> TLS for $DOMAIN"
-  certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos \
-          --register-unsafely-without-email --redirect || \
-    echo "    certbot failed — DNS may not point here yet. Re-run: certbot --nginx -d $DOMAIN"
+  if ! certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos \
+          --register-unsafely-without-email --redirect; then
+    echo "!! TLS FAILED for $DOMAIN — DNS may not point at this machine yet." >&2
+    echo "   Fix the DNS record, then re-run: certbot --nginx -d $DOMAIN" >&2
+    echo "   The service is installed but NOT ready to expose. Stopping." >&2
+    exit 1
+  fi
 fi
 
 echo
 echo "Done. Next:"
-echo "  1. Edit $CONF_DIR/$SVC.env, then: systemctl restart $SVC"
+echo "  0. Create the admin account — nothing is seeded:"
+echo "       cd $APP_DIR/backend && sudo -u $SVC .venv/bin/python -m app.manage create-admin --email you@example.com"
+echo "  1. Edit $CONF_DIR/$SVC.env (DRIVE_FOLDER_URL), then: systemctl restart $SVC"
 echo "  2. Open ports 80 and 443 in the Oracle VCN security list (Networking → VCN → Security Lists)."
 echo "  3. Check:  systemctl status $SVC  &&  curl -s localhost:8000/api/public/library"
 echo "  4. Point the site at it:"
