@@ -45,10 +45,10 @@ One staff login page at `/login`. Accounts:
 
 | Role | Login | Password | Can |
 |---|---|---|---|
-| Super Admin | `admin@riper.test` | `admin123` | everything |
-| Department master | `master.pce@dept.riper.test` | `dept123` | CRUD own department's subjects, upload sources |
-| Department master | `master.pco@dept.riper.test` | `dept123` | …and so on for pch, pgr, ppr, gen |
-| SME (demo) | `sme.pharmacology@riper.test` | `sme123` | own department, submit only, cannot publish |
+| Super Admin | `admin@techstudyhubcore.in` | `admin123` | everything |
+| Department master | `master.pce@techstudyhubcore.in` | `dept123` | CRUD own department's subjects, upload sources |
+| Department master | `master.pco@techstudyhubcore.in` | `dept123` | …and so on for pch, pgr, ppr, gen |
+| SME (demo) | `sme.pharmacology@techstudyhubcore.in` | `sme123` | own department, submit only, cannot publish |
 
 > Demo credentials only. Change them, and set `DEPT_MASTER_PASSWORD` in the environment before
 > real use.

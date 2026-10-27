@@ -1,8 +1,7 @@
-# RIPER e-Library
+# TechStudyHubCore Pharmacy
 
-A semester-wise B.Pharm study library for students of RIPER (Raghavendra Institute of
-Pharmaceutical Education and Research, Anantapur), built on the **PCI B.Pharm syllabus 2026
-(NEP 2020)** as an interim source until the college's own syllabus is supplied.
+A semester-wise B.Pharm study library for pharmacy students, built on the **PCI B.Pharm syllabus
+2026 (NEP 2020)** as an interim source until an institution's own syllabus is supplied and verified.
 
 This is a small monorepo: a public static site, a backend service, and a security-check lane.
 
@@ -41,9 +40,9 @@ Accounts created on first start:
 
 | Role | Login | Password | Can |
 |---|---|---|---|
-| Super Admin | `admin@riper.test` | `admin123` | everything |
-| Department master (one per department) | `master.pce@dept.riper.test` (etc.) | `dept123` | CRUD that department's subjects + upload sources |
-| SME (demo) | `sme.pharmacology@riper.test` | `sme123` | submit material, cannot publish |
+| Super Admin | `admin@techstudyhubcore.in` | `admin123` | everything |
+| Department master (one per department) | `master.pce@techstudyhubcore.in` (etc.) | `dept123` | CRUD that department's subjects + upload sources |
+| SME (demo) | `sme.pharmacology@techstudyhubcore.in` | `sme123` | submit material, cannot publish |
 
 **Students have no accounts** — they read the public site anonymously. Material is kept in one
 shared Google Drive folder (`DRIVE_FOLDER_URL`); the catalogue links to it.

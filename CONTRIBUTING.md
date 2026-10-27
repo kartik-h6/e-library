@@ -1,4 +1,4 @@
-# Contributing to RIPER e-Library
+# Contributing to TechStudyHubCore Pharmacy
 
 Thanks for helping students find useful learning resources.
 

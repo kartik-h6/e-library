@@ -1,4 +1,4 @@
-"""RIPER e-Library — admin dashboard (scaffold).
+"""TechStudyHubCore Pharmacy — admin dashboard (scaffold).
 
 A small FastAPI service with server-enforced roles and CRUD for subjects,
 units and resources, plus a review workflow and a publish action that writes
@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="RIPER e-Library Admin (scaffold)", lifespan=lifespan)
+app = FastAPI(title="TechStudyHubCore Pharmacy Admin (scaffold)", lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=SECRET, same_site="lax")
 app.add_middleware(CORSMiddleware, allow_origins=ALLOWED_ORIGINS,
                    allow_methods=["GET"], allow_headers=["*"])
