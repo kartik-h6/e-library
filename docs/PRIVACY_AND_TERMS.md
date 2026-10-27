@@ -82,8 +82,8 @@ and no data is knowingly collected from them.
 - Add a database backup schedule.
 
 **If a credential leaks**
-Rotate `SESSION_SECRET` and `DEPT_MASTER_PASSWORD`, redeploy, and review the audit trail for
-unexpected writes.
+Rotate `SESSION_SECRET`, reset the administrator's credentials with the `app.manage` CLI,
+redeploy, and review the audit trail for unexpected writes.
 
 ---
 
