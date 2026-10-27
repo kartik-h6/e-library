@@ -39,7 +39,7 @@ The steps below are the generic managed-host alternative (Render, Fly, Railway).
    |---|---|
    | `DATABASE_URL` | the PostgreSQL URL from step 1 |
    | `SESSION_SECRET` | a long random string |
-   | `DEPT_MASTER_PASSWORD` | a strong password for every department master |
+   | `COOKIE_SECURE` | `1` — send the session cookie only over HTTPS |
    | `DRIVE_FOLDER_URL` | your shared Drive folder link |
    | `PUBLIC_SITE_URL` | `https://kartik-h6.github.io/e-library/` |
    | `CORS_ORIGINS` | `https://kartik-h6.github.io` |
@@ -102,7 +102,7 @@ There is no other recurring cost — no CDN, no email service, no paid API.
 |---|---|---|
 | Weekly | Glance at the Security workflow result; nothing to do if green | 2 min |
 | Monthly | `pip list --outdated` in `backend/`; update and redeploy | 15 min |
-| Monthly | Review the audit trail (`revisions`); rotate `DEPT_MASTER_PASSWORD` if a staff member leaves | 5 min |
+| Monthly | Review the audit trail (`revisions`); rotate staff credentials with the `app.manage` CLI | 5 min |
 | Per term | Refresh the catalogue when your institution's official syllabus arrives | 30 min |
 | Ad hoc | Back up the database before schema changes | 10 min |
 
@@ -114,5 +114,5 @@ Steady state: **under an hour a month**, most of it dependency updates.
   reverted by reverting the commit.
 - **Backend down:** students are unaffected — subject pages fall back to their static content.
   Only staff lose the dashboard.
-- **Credential leak:** rotate `SESSION_SECRET` and `DEPT_MASTER_PASSWORD`, redeploy, and check the
-  audit trail for unexpected writes.
+- **Leaked secret:** rotate `SESSION_SECRET`, reset the administrator's credentials with the
+  `app.manage` CLI, redeploy, and check the audit trail for unexpected writes.
