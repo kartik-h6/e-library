@@ -1,14 +1,13 @@
-"""Seed the database: departments, accounts, and the NEP catalogue distributed by department.
+"""Seed the database: departments and the NEP catalogue distributed by department.
 
 Idempotent: safe to run on every start.
 
-Accounts created
-----------------
-* Super Admin        — one, full control.
-* Department master  — one per department; CRUD on that department's subjects and sources.
-* SME (demo)         — a subject-matter expert who can submit but not publish.
+**No accounts are created here.** A fresh install must never come up with a known password.
+Create the administrator deliberately with:
 
-Students do not have accounts: they read the public site anonymously.
+    python -m app.manage create-admin --email you@example.com
+
+Students do not have accounts at all: they read the public site anonymously.
 """
 import json
 import os
@@ -18,7 +17,6 @@ from pathlib import Path
 from .db import SessionLocal, engine
 from .models import Base, Department, Semester, Subject, Unit, User
 from .paths import catalogue_src
-from .security import hash_password
 
 DEPARTMENTS = [
     ("PCE", "Pharmaceutics"),
@@ -28,10 +26,6 @@ DEPARTMENTS = [
     ("PPR", "Pharmacy Practice"),
     ("GEN", "Common Courses"),
 ]
-
-# One master account per department. Change before any real use.
-DEPT_MASTER_PASSWORD = os.environ.get("DEPT_MASTER_PASSWORD", "dept123")
-DEPT_MASTER_EMAIL = "master.{code}@techstudyhubcore.in"
 
 def slugify(text: str) -> str:
     return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", text.lower())).strip("-")
@@ -86,27 +80,7 @@ def seed() -> None:
                 db.add(Department(code=code, name=name))
             db.commit()
 
-        if db.query(User).count() == 0:
-            dept_by_code = {d.code: d.id for d in db.query(Department).all()}
-
-            # the maintainer
-            db.add(User(name="Super Admin", email="admin@techstudyhubcore.in",
-                        password_hash=hash_password("admin123"),
-                        role="super_admin", department_id=None))
-
-            # one master per department
-            for code, name in DEPARTMENTS:
-                db.add(User(name=f"{name} — Master",
-                            email=DEPT_MASTER_EMAIL.format(code=code.lower()),
-                            password_hash=hash_password(DEPT_MASTER_PASSWORD),
-                            role="hod", department_id=dept_by_code.get(code)))
-
-            # one demo SME
-            db.add(User(name="SME — Pharmacology", email="sme.pharmacology@techstudyhubcore.in",
-                        password_hash=hash_password("sme123"),
-                        role="sme", department_id=dept_by_code.get("PCO")))
-
-            db.commit()
+        # No accounts are created here — deliberately. See the module docstring.
 
         if db.query(Subject).count() == 0:
             src = catalogue_src()
