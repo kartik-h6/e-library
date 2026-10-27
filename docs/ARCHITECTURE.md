@@ -1,7 +1,7 @@
 # Architecture proposal
 
 ## Status
-Proposed target architecture, not yet implemented. Curriculum routes depend on the official syllabus applicable at RIPER.
+Proposed target architecture, not yet implemented. Curriculum routes depend on the official syllabus applicable at TechStudyHubCore.
 
 ## Goals
 - Static-first delivery for affordable, reliable read access.

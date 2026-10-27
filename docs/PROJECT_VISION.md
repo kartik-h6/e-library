@@ -1,7 +1,7 @@
 # Project vision
 
 ## Purpose
-Make academic learning resources easier for RIPER students to discover and use through an organized, mobile-friendly library.
+Make academic learning resources easier for pharmacy students to discover and use through an organized, mobile-friendly library.
 
 ## Problem
 A folder of PDFs is not enough: students need a predictable path from programme and semester to subject, unit, and resource, plus metadata to judge relevance.

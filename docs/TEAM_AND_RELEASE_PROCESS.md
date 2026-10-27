@@ -1,4 +1,4 @@
-# RIPER e-Library — Contributor & Release Process
+# TechStudyHubCore Pharmacy — Contributor & Release Process
 
 How work reaches this repository: who contributes, who reviews what, and what must pass before a
 change merges.

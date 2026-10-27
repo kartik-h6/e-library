@@ -42,10 +42,10 @@ and no data is knowingly collected from them.
 
 ## 2. Terms of use
 
-- This is a **student-built study aid**, not an official publication of RIPER. It is not endorsed
-  by, or affiliated with, the college or the Pharmacy Council of India.
+- This is an **independent study platform**, not affiliated with or endorsed by the Pharmacy Council of
+  India or any college or university.
 - The course structure follows the **PCI B.Pharm syllabus 2026 (NEP 2020)** as an *interim source*
-  until RIPER's own syllabus is supplied and verified. Always check against the official syllabus.
+  until your institution's official syllabus is supplied and verified. Always check against the official syllabus.
 - Material is provided **as-is, without warranty**. Verify anything you rely on — especially for
   exams, clinical work, or anything with real consequences.
 - **Contributions:** do not submit copyrighted material you have no right to share, paid coaching

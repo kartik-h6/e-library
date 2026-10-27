@@ -36,9 +36,9 @@ with TestClient(app) as c:
     print("Auth")
     r = c.get("/dashboard", follow_redirects=False)
     check("anonymous is redirected to login", r.status_code in (303, 307) and "/login" in r.headers.get("location", ""))
-    r = c.post("/login", data={"email": "admin@riper.test", "password": "wrong"}, follow_redirects=False)
+    r = c.post("/login", data={"email": "admin@techstudyhubcore.in", "password": "wrong"}, follow_redirects=False)
     check("wrong password rejected", r.status_code == 200 and "Invalid" in r.text)
-    r = c.post("/login", data={"email": "admin@riper.test", "password": "admin123"}, follow_redirects=False)
+    r = c.post("/login", data={"email": "admin@techstudyhubcore.in", "password": "admin123"}, follow_redirects=False)
     check("super admin logs in", r.status_code == 303)
     r = c.get("/dashboard")
     check("dashboard renders", r.status_code == 200 and "Dashboard" in r.text)
@@ -110,7 +110,7 @@ with TestClient(app) as c:
 
     print("Role scoping (SME — Pharmacology)")
     c2 = TestClient(app)
-    c2.post("/login", data={"email": "sme.pharmacology@riper.test", "password": "sme123"})
+    c2.post("/login", data={"email": "sme.pharmacology@techstudyhubcore.in", "password": "sme123"})
     r = c2.get("/subjects")
     body = r.text
     check("SME sees subjects page", r.status_code == 200)
@@ -126,7 +126,7 @@ with TestClient(app) as c:
 
     print("Department scoping (Chemistry master)")
     c4 = TestClient(app)
-    c4.post("/login", data={"email": "master.pch@dept.riper.test", "password": "dept123"})
+    c4.post("/login", data={"email": "master.pch@techstudyhubcore.in", "password": "dept123"})
     body = c4.get("/subjects").text
     check("chemistry master sees chemistry subjects",
           "Medicinal Chemistry" in body or "Pharmaceutical Organic Chemistry" in body)

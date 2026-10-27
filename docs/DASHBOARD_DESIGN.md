@@ -1,4 +1,4 @@
-# RIPER e-Library — Admin Dashboard (Design)
+# TechStudyHubCore Pharmacy — Admin Dashboard (Design)
 
 **Status:** design proposal (Stage 3). Not built. This document defines *what* would be built and *why*, so the decision to build it can be made on evidence rather than impulse.
 

@@ -103,7 +103,7 @@ There is no other recurring cost — no CDN, no email service, no paid API.
 | Weekly | Glance at the Security workflow result; nothing to do if green | 2 min |
 | Monthly | `pip list --outdated` in `backend/`; update and redeploy | 15 min |
 | Monthly | Review the audit trail (`revisions`); rotate `DEPT_MASTER_PASSWORD` if a staff member leaves | 5 min |
-| Per term | Refresh the catalogue when RIPER's official syllabus arrives | 30 min |
+| Per term | Refresh the catalogue when your institution's official syllabus arrives | 30 min |
 | Ad hoc | Back up the database before schema changes | 10 min |
 
 Steady state: **under an hour a month**, most of it dependency updates.

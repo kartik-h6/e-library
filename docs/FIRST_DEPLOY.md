@@ -31,8 +31,8 @@ you need a domain or subdomain. Nothing more.
 
 1. **An Oracle Cloud account** — free. Oracle asks for a card to confirm you are a real person.
    **Always Free resources are not charged**, though a small temporary hold may appear.
-2. **A name** (domain or subdomain). If you own one, use it. If not, DuckDNS gives you a free one
-   in two minutes — see Step 0.
+2. **A subdomain** — you already own `techstudyhubcore.in`; in Step 0 you point `elibrary.` at the
+   machine. Nothing to buy.
 3. **A private key file** — Oracle gives you one when you create the machine. It is your login. Keep
    it safe; you cannot recover it.
 4. **Two decisions**, nothing technical:
@@ -43,37 +43,34 @@ you need a domain or subdomain. Nothing more.
 
 ## 3. Step by step (about 30 minutes)
 
-### Step 0 — Get the name (do this first)
+### Step 0 — Point the subdomain at the machine (do this first)
 
-Sign in at **duckdns.org** with Google or GitHub. Create a subdomain, e.g. `riperlibrary`.
-You now own `riperlibrary.duckdns.org`. In the box next to it, paste the IP address of your machine
-— you will get that in Step 1, so come back and fill it in then.
+`techstudyhubcore.in` is registered at **BigRock**, but its DNS is managed on **Cloudflare** — so the
+record goes in Cloudflare, not BigRock.
 
-> **You already own a domain — skip DuckDNS entirely.** `techstudyhubcore.in` is registered at
-> BigRock, but its DNS is managed on **Cloudflare**, so the record goes in Cloudflare, not BigRock.
->
-> 1. Sign in at **dash.cloudflare.com** and click `techstudyhubcore.in`.
-> 2. Left menu → **DNS** → **Records** → **Add record**.
-> 3. Fill it in exactly like this:
->
->    | Field | Value |
->    |---|---|
->    | Type | `A` |
->    | Name | `library` |
->    | IPv4 address | your machine's public IP |
->    | Proxy status | **DNS only** — the **grey** cloud, *not* the orange one |
->    | TTL | Auto |
->
-> 4. **Save.** You now have `library.techstudyhubcore.in`.
->
-> **Two Cloudflare things worth knowing:**
-> - Keep the cloud **grey** for now. Orange puts Cloudflare in front of your server — genuinely
->   useful later, but it adds one setting that breaks everything if it's wrong.
-> - If you ever switch it to orange, you **must** set **SSL/TLS → Overview → Full (strict)**.
->   Never choose "Flexible": with our HTTP→HTTPS redirect it causes an endless redirect loop.
->
-> Your main website at `techstudyhubcore.in` is untouched — a subdomain is a separate signboard,
-> not a new building.
+1. Sign in at **dash.cloudflare.com** and click `techstudyhubcore.in`.
+2. Left menu → **DNS** → **Records** → **Add record**.
+3. Fill it in exactly like this:
+
+   | Field | Value |
+   |---|---|
+   | Type | `A` |
+   | Name | `elibrary` |
+   | IPv4 address | your machine's public IP |
+   | Proxy status | **DNS only** — the **grey** cloud, *not* the orange one |
+   | TTL | Auto |
+
+4. **Save.** You now have `elibrary.techstudyhubcore.in`.
+
+**Two Cloudflare things worth knowing:**
+
+- Keep the cloud **grey** for now. Orange puts Cloudflare in front of your server — genuinely useful
+  later, but it adds one setting that breaks everything if it is wrong.
+- If you ever switch it to orange, you **must** set **SSL/TLS → Overview → Full (strict)**. Never
+  choose "Flexible": with our HTTP→HTTPS redirect it causes an endless redirect loop.
+
+Your main site at `techstudyhubcore.in` is untouched — a subdomain is a separate signboard, not a
+new building.
 
 ### Step 1 — Create the machine
 
@@ -85,7 +82,7 @@ You now own `riperlibrary.duckdns.org`. In the box next to it, paste the IP addr
    more powerful ARM shape is also free but is often out of stock.)
 6. Under **Add SSH keys**, choose **Generate a key pair for me**, then **download the private key**.
 7. Click **Create**. Wait a minute. Copy the **Public IP address** shown on the instance page.
-8. Go back to DuckDNS and paste that IP into your subdomain. Save. Wait 2 minutes.
+8. Go back to Cloudflare and paste that IP into the `elibrary` record. Save. Wait 2 minutes.
 
 ### Step 2 — Open the two doors
 
@@ -114,7 +111,7 @@ You are now "inside" the machine. Run these three lines:
 
 ```bash
 git clone --depth 1 https://github.com/kartik-h6/e-library.git ~/e-library
-sudo DOMAIN=riperlibrary.duckdns.org bash ~/e-library/backend/deploy/setup.sh
+sudo DOMAIN=elibrary.techstudyhubcore.in bash ~/e-library/backend/deploy/setup.sh
 sudo systemctl status elibrary
 ```
 
@@ -145,10 +142,10 @@ sudo systemctl restart elibrary
 Open a browser on your own laptop and go to:
 
 ```
-https://riperlibrary.duckdns.org/login
+https://elibrary.techstudyhubcore.in/login
 ```
 
-You should see the sign-in page **with a padlock**. Sign in as `admin@riper.test` / `admin123`
+You should see the sign-in page **with a padlock**. Sign in as `admin@techstudyhubcore.in` / `admin123`
 (change this password soon). If you see the dashboard with 88 subjects, the backend is done.
 
 ### Step 6 — Connect the public site to it
@@ -157,7 +154,7 @@ On your own laptop, in the project folder:
 
 ```bash
 cd frontend
-API_BASE=https://riperlibrary.duckdns.org SIGN_IN_URL=https://riperlibrary.duckdns.org/login python3 build/generate.py
+API_BASE=https://elibrary.techstudyhubcore.in SIGN_IN_URL=https://elibrary.techstudyhubcore.in/login python3 build/generate.py
 git add -A && git commit -m "Connect site to the staff service" && git push
 ```
 
@@ -168,23 +165,22 @@ material live.
 
 ## 4. What success looks like
 
-- `https://riperlibrary.duckdns.org/login` shows the sign-in page with a padlock.
+- `https://elibrary.techstudyhubcore.in/login` shows the sign-in page with a padlock.
 - Signing in as a department head shows only that department's subjects plus Common Courses.
 - Publishing something as staff makes it appear on the public site after a refresh.
 
-## 5. About RIPER's domain
+## 5. About the domain
 
-**Do not put this on the college's domain yet.** Two reasons: a site on the college's own address
-looks officially endorsed, and you have not been given that permission. The project already says on
-every page that it is *"a student-built study library, not an official publication of RIPER"* — keep
-that true.
+**Host this on your own domain, not a college's.** A site on a college's address looks officially
+endorsed by them, and you have not been given that permission. Every page already says this is an
+independent study platform, not affiliated with the PCI or any institution — keep that true.
 
-So: run it on the free DuckDNS name now. It costs nothing, it works today, and it is completely
-reversible. If RIPER later wants it official, ask their IT department for a subdomain such as
-`library.riper.ac.in`, point it at the same machine, and re-run the two commands from Step 3 and
-Step 6 with the new name. That is a ten-minute change, not a rebuild.
+`elibrary.techstudyhubcore.in` is the staff portal and API. The public library stays on GitHub Pages
+for now. If you later want the public site on your own domain too, point a second subdomain (for
+example `library.techstudyhubcore.in`) at GitHub Pages, and add that origin to `CORS_ORIGINS` — the
+browser will block live material otherwise.
 
-If the college would rather host it themselves, that is fine too — this same script runs on any
+If an institution later wants to host its own copy, that is fine too: this same script runs on any
 Ubuntu machine they provide.
 
 ## 6. If Oracle turns you down

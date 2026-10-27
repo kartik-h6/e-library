@@ -3,7 +3,7 @@
 ## Stage 0 — Documentation and source confirmation
 - [x] Locate repository and inspect current top-level files.
 - [ ] Add architecture/documentation package on a branch.
-- [ ] Obtain official syllabus used at RIPER and confirm programme/cohort.
+- [ ] Obtain official syllabus used at TechStudyHubCore and confirm programme/cohort.
 - [ ] Decide hosting and permissible resource storage.
 
 ## Stage 1 — First usable journey
