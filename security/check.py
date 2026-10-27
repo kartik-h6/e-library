@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Security & release checks for the RIPER e-Library monorepo.
+"""Security & release checks for the TechStudyHubCore Pharmacy monorepo.
 
 Run from the repository root:   python3 security/check.py
 
@@ -114,7 +114,7 @@ def check_backend_tests():
 
 
 def main():
-    print("Security & release checks — RIPER e-Library\n")
+    print("Security & release checks — TechStudyHubCore Pharmacy\n")
     scan_secrets()
     check_ignores()
     check_no_client_side_auth()
