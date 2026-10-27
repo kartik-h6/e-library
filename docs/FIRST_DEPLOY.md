@@ -118,22 +118,21 @@ sudo systemctl status elibrary
 That installs everything, starts the service, sets up the website in front of it, and gets the
 padlock. The last line should say **active (running)** in green. Press `q` to exit.
 
-### Step 4 — Set your two settings
+### Step 4 — Create the admin account
+
+Nothing is seeded, so there is no default password anywhere. Create your own account:
 
 ```bash
-sudo nano /etc/elibrary/elibrary.env
+cd /opt/elibrary/backend
+sudo -u elibrary .venv/bin/python -m app.manage create-admin --email you@example.com
 ```
 
-Change these two lines, then press `Ctrl+O`, `Enter`, `Ctrl+X` to save and exit:
+It asks for a password twice (minimum 10 characters) and never prints or stores it in plain text.
 
-```
-DEPT_MASTER_PASSWORD=paste-a-strong-password-here
-DRIVE_FOLDER_URL=paste-your-drive-folder-link-here
-```
-
-Then:
+Then set your Drive folder:
 
 ```bash
+sudo nano /etc/elibrary/elibrary.env     # set DRIVE_FOLDER_URL, save with Ctrl+O, Enter, Ctrl+X
 sudo systemctl restart elibrary
 ```
 
@@ -145,8 +144,8 @@ Open a browser on your own laptop and go to:
 https://elibrary.techstudyhubcore.in/login
 ```
 
-You should see the sign-in page **with a padlock**. Sign in as `admin@techstudyhubcore.in` / `admin123`
-(change this password soon). If you see the dashboard with 88 subjects, the backend is done.
+You should see the sign-in page **with a padlock**. Sign in with the account you just created.
+If you see the dashboard with 88 subjects, the backend is done.
 
 ### Step 6 — Connect the public site to it
 

@@ -33,12 +33,29 @@ def csrf_of(html):
 
 
 with TestClient(app) as c:
+    # Accounts are never seeded — the tests create their own in the throwaway database.
+    _fdb = SessionLocal()
+    from app.models import Department as _Dept, User as _User
+    from app.security import hash_password as _hash
+    check("no accounts are seeded on a fresh database", _fdb.query(_User).count() == 0)
+    if not _fdb.query(_User).filter(_User.email == "admin@test.local").first():
+        _pch = _fdb.query(_Dept).filter(_Dept.code == "PCH").first()
+        _pco = _fdb.query(_Dept).filter(_Dept.code == "PCO").first()
+        _fdb.add(_User(name="Test Admin", email="admin@test.local",
+                       password_hash=_hash("test-admin-pw"), role="super_admin"))
+        _fdb.add(_User(name="Test Chem Master", email="master.pch@test.local",
+                       password_hash=_hash("test-dept-pw"), role="hod", department_id=_pch.id))
+        _fdb.add(_User(name="Test SME", email="sme@test.local",
+                       password_hash=_hash("test-sme-pw"), role="sme", department_id=_pco.id))
+        _fdb.commit()
+    _fdb.close()
+
     print("Auth")
     r = c.get("/dashboard", follow_redirects=False)
     check("anonymous is redirected to login", r.status_code in (303, 307) and "/login" in r.headers.get("location", ""))
-    r = c.post("/login", data={"email": "admin@techstudyhubcore.in", "password": "wrong"}, follow_redirects=False)
+    r = c.post("/login", data={"email": "admin@test.local", "password": "wrong"}, follow_redirects=False)
     check("wrong password rejected", r.status_code == 200 and "Invalid" in r.text)
-    r = c.post("/login", data={"email": "admin@techstudyhubcore.in", "password": "admin123"}, follow_redirects=False)
+    r = c.post("/login", data={"email": "admin@test.local", "password": "test-admin-pw"}, follow_redirects=False)
     check("super admin logs in", r.status_code == 303)
     r = c.get("/dashboard")
     check("dashboard renders", r.status_code == 200 and "Dashboard" in r.text)
@@ -110,7 +127,7 @@ with TestClient(app) as c:
 
     print("Role scoping (SME — Pharmacology)")
     c2 = TestClient(app)
-    c2.post("/login", data={"email": "sme.pharmacology@techstudyhubcore.in", "password": "sme123"})
+    c2.post("/login", data={"email": "sme@test.local", "password": "test-sme-pw"})
     r = c2.get("/subjects")
     body = r.text
     check("SME sees subjects page", r.status_code == 200)
@@ -126,7 +143,7 @@ with TestClient(app) as c:
 
     print("Department scoping (Chemistry master)")
     c4 = TestClient(app)
-    c4.post("/login", data={"email": "master.pch@techstudyhubcore.in", "password": "dept123"})
+    c4.post("/login", data={"email": "master.pch@test.local", "password": "test-dept-pw"})
     body = c4.get("/subjects").text
     check("chemistry master sees chemistry subjects",
           "Medicinal Chemistry" in body or "Pharmaceutical Organic Chemistry" in body)
