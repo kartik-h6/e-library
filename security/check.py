@@ -36,7 +36,7 @@ SECRET_PATTERNS = [
 # Values that are documented demo/placeholder material, not secrets.
 ALLOW = re.compile(
     r"(change-this|dev-secret|placeholder|example|your[-_]|xxx|test|demo|"
-    r"admin123|hod123|sme123|cont123|dept123|library2026)", re.I)
+    r"placeholder|test|demo|example)", re.I)
 
 TEXT_EXT = {".py", ".js", ".html", ".css", ".json", ".md", ".yml", ".yaml",
             ".txt", ".cfg", ".ini", ".sh", ".env"}
