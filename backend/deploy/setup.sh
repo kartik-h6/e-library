@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Provision a fresh Ubuntu VM (Oracle Cloud Always Free) to run the RIPER e-Library backend.
+# Provision a fresh Ubuntu VM (Oracle Cloud Always Free) to run the TechStudyHubCore Pharmacy backend.
 #
 #   sudo DOMAIN=library.example.com bash setup.sh
 #
 # DOMAIN is optional. Without it nginx serves plain HTTP on the public IP, which is enough to
 # test — but the public site is HTTPS, so browsers will block it until the API is HTTPS too.
-# Give it a hostname (a domain, or a free DuckDNS one) before pointing the site at it.
+# Give it a hostname you own before pointing the site at it.
 set -euo pipefail
 
 DOMAIN="${DOMAIN:-}"

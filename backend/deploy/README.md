@@ -68,12 +68,11 @@ curl -s localhost:8000/api/public/library | head -c 200
 ## 4. HTTPS — and why you need a hostname
 
 The public site is served over HTTPS, and a browser will **block** an HTTPS page from calling an
-HTTP API. So the backend must be HTTPS too, which means it needs a hostname. Two ₹0 routes:
+HTTP API. So the backend must be HTTPS too, which means it needs a hostname — not a bare IP.
 
-- **A domain you already own** — point an `A` record at the VM's IP, pass it as `DOMAIN` and
-  `setup.sh` runs certbot for you.
-- **A free DuckDNS subdomain** — `yourname.duckdns.org` pointed at the IP, then the same certbot
-  step. No domain purchase needed.
+- **This project:** `elibrary.techstudyhubcore.in` — an `A` record in Cloudflare pointing at the VM,
+  passed as `DOMAIN`; `setup.sh` runs certbot for you.
+- **No domain yet?** A free DuckDNS subdomain works the same way, with the same certbot step.
 
 If you'd rather not open ports at all, a **Cloudflare Tunnel** gives you HTTPS with no inbound
 ports and no certificate management — it does add a Cloudflare dependency, so it's a trade, not a

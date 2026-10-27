@@ -31,7 +31,7 @@ DEPARTMENTS = [
 
 # One master account per department. Change before any real use.
 DEPT_MASTER_PASSWORD = os.environ.get("DEPT_MASTER_PASSWORD", "dept123")
-DEPT_MASTER_EMAIL = "master.{code}@dept.riper.test"
+DEPT_MASTER_EMAIL = "master.{code}@techstudyhubcore.in"
 
 def slugify(text: str) -> str:
     return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", text.lower())).strip("-")
@@ -90,7 +90,7 @@ def seed() -> None:
             dept_by_code = {d.code: d.id for d in db.query(Department).all()}
 
             # the maintainer
-            db.add(User(name="Super Admin", email="admin@riper.test",
+            db.add(User(name="Super Admin", email="admin@techstudyhubcore.in",
                         password_hash=hash_password("admin123"),
                         role="super_admin", department_id=None))
 
@@ -102,7 +102,7 @@ def seed() -> None:
                             role="hod", department_id=dept_by_code.get(code)))
 
             # one demo SME
-            db.add(User(name="SME — Pharmacology", email="sme.pharmacology@riper.test",
+            db.add(User(name="SME — Pharmacology", email="sme.pharmacology@techstudyhubcore.in",
                         password_hash=hash_password("sme123"),
                         role="sme", department_id=dept_by_code.get("PCO")))
 
