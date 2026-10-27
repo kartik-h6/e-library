@@ -12,9 +12,9 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -33,6 +33,8 @@ DRIVE_FOLDER = os.environ.get("DRIVE_FOLDER_URL", "")
 PUBLIC_SITE = os.environ.get("PUBLIC_SITE_URL", "https://kartik-h6.github.io/e-library/")
 # Origins allowed to read the public material API. "*" is fine: it is public, read-only data.
 ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("CORS_ORIGINS", "*").split(",") if o.strip()]
+# Send the session cookie only over HTTPS. Turn on in production (setup.sh sets it).
+COOKIE_SECURE = os.environ.get("COOKIE_SECURE", "0").lower() not in ("0", "", "false", "no")
 
 ACTION_STATUS = {"submit": "needs-review", "approve": "verified",
                  "publish": "published", "archive": "archived", "reopen": "draft"}
@@ -42,17 +44,25 @@ ACTION_STATUS = {"submit": "needs-review", "approve": "verified",
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(engine)
     seed()
+    # A fresh install has no accounts by design — say what to do about it.
+    db = SessionLocal()
+    try:
+        if db.query(User).count() == 0:
+            print("[elibrary] No staff accounts yet. Create the administrator with:\n"
+                  "  python -m app.manage create-admin --email you@example.com", flush=True)
+    finally:
+        db.close()
     yield
 
 
 app = FastAPI(title="TechStudyHubCore Pharmacy Admin (scaffold)", lifespan=lifespan)
-app.add_middleware(SessionMiddleware, secret_key=SECRET, same_site="lax")
+app.add_middleware(SessionMiddleware, secret_key=SECRET, same_site="lax", https_only=COOKIE_SECURE)
 app.add_middleware(CORSMiddleware, allow_origins=ALLOWED_ORIGINS,
                    allow_methods=["GET"], allow_headers=["*"])
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+
 templates = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
 
 
@@ -327,6 +337,25 @@ def library(request: Request, db=Depends(get_db)):
         groups.setdefault(r.subject_id, []).append(r)
     subjects = {s.id: s for s in db.query(Subject).all()}
     return page(request, db, "library.html", groups=groups, subjects=subjects, total=len(rows))
+
+
+# ---------------------------------------------------------------- staff-only uploads
+
+@app.get("/uploads/{name}")
+def uploaded_file(name: str, request: Request, db=Depends(get_db)):
+    """Serve an uploaded file to signed-in staff only.
+
+    An upload is staging, not a published source: public material should be a Drive (or other
+    external) link. This route deliberately requires a staff session, so a draft cannot be read
+    by anyone who guesses its URL.
+    """
+    user, redir = gate(request, db)
+    if redir:
+        return redir
+    path = UPLOAD_DIR / os.path.basename(name)
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Not found")
+    return FileResponse(path)
 
 
 # ---------------------------------------------------------------- public API (no auth)
